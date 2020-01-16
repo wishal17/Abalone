@@ -17,6 +17,10 @@ public class Move {
 
 	}
 	public void MoveNE(Marble ...m) {
+		//asdihf
+		
+		
+		
 		
 	}
 	public void MoveW(Marble ...m){
