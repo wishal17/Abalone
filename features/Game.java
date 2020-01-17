@@ -1,8 +1,5 @@
 package features;
 
-import ss.week4.tictactoe.Board;
-import ss.week4.tictactoe.Player;
-
 public class Game {
 	private Board board;
 	private Player[] players;

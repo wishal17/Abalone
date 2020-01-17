@@ -1,4 +1,4 @@
 package features;
  enum Marble {
-	EMPTY, BLACK, WHITE, BLUE, RED;
+	EE, BB, WW, YY, RR;
 }
