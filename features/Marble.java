@@ -1,4 +1,4 @@
 package features;
- enum Marble {
+ public enum Marble {
 	EE, BB, WW, YY, RR;
 }

@@ -1,53 +1,14 @@
-package features;
+package Testing;
 
-import java.util.Map;
-
-public class Move {
-
-	public boolean MovePossible() {
-		return true;//false;
-	}
-	public void MoveNW(Marble m, String ...s) {
-		for(String string : s) {
-			System.out.println(string);
-			char originalYAXIS = string.charAt(1);
-			System.out.println(originalYAXIS);
-			char originalXAXIS = string.charAt(0);
-			System.out.println(originalXAXIS);
-			originalYAXIS++;
-			char newYAXIS = originalYAXIS;
-			String MarbleAtNW = (originalXAXIS+""+newYAXIS);
-			System.out.println(MarbleAtNW);
-			if(Board.hasMarble(MarbleAtNW)==true) {
-				Board.map.replace(MarbleAtNW, Board.getMarble(MarbleAtNW),m);
-				Board.map.replace(string, m, Marble.EE);
-			} else {
-				Board.map.replace(MarbleAtNW, Marble.EE,m);
-				Board.map.replace(string, m, Marble.EE);
-			}
-			
-		}
-
-	}
-	public void MoveNE(Marble ...m) {
-		
-		
-	}
-	public void MoveW(Marble ...m){
-		
-	}
-	public void MoveE(Marble ...m) {
-		
-	}
-	public void MoveSW(Marble ...m) {
-		
-	}
-	public void MoveSE(Marble ...m) {
-		
-	}
-	public void main(String args[]) {
-		Board b = new Board(new Layout(2));
-		MoveNW(Marble.BB,"3C", "4C");
+import features.Board;
+import features.Layout;
+import features.Move;
+import features.Marble;
+public class MovementDisplayTest {
+	public static void main(String[] args) {
+		Board board = new Board(new Layout(2));
+		Move m = new Move();
+		m.MoveNW(Marble.BB, "3C","4C","5C");
 		System.out.print("    ");
 		for (String k : Board.map.keySet()) {
 			if (k.equals("9I")) {
@@ -213,5 +174,6 @@ public class Move {
 				System.out.print(Board.map.get(k) + " ");
 			}
 		}
+
 	}
 }
