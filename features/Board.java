@@ -274,6 +274,7 @@ public class Board {
 		}
 
 	}
+	
 	public Board createBoard(int number) {
 		Board board = new Board(number);
 		return board;
@@ -284,9 +285,11 @@ public class Board {
 		return b;
 	}
 	
+	public Map<String, Marble> getMap(){
+		return map;
+	}
 
 
 	public static void main(String[] args) {
-		
 	}
 }

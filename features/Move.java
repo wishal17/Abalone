@@ -1,25 +1,22 @@
 package features;
 
+import java.util.Map;
 
 public class Move {
-
-
-	
-	Board board = new Board(2);
+	Board board = createBoard(2);
+	Map<String, Marble> map = board.getMap();
 	public boolean MovePossible() {
 		return true;//false;
 	}
 	public void MoveNW(Marble m, String ...s) {
 		for(String string : s) {
-			board.replace(string, Marble.EMPTY,m);
-			board.replace(string, m, Marble.EMPTY);
+			string.charAt(index)
+			map.replace(string, Marble.EMPTY,m);
+			map.replace(string, m, Marble.EMPTY);
 		}
 
 	}
 	public void MoveNE(Marble ...m) {
-		//asdihf
-		
-		
 		
 		
 	}
