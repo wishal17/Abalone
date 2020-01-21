@@ -2,6 +2,7 @@ package features;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+
 /*
  * Class responsible for different marble layouts depending on the number of players
  */
@@ -10,7 +11,8 @@ public class Layout {
 	private static final char[] YAXIS = "ABCDEFGHI".toCharArray();
 	private Marble[] values;
 	private Map<String, Marble> LayoutMap = new LinkedHashMap<String, Marble>();
-	public Layout (int layout) {
+
+	public Layout(int layout) {
 		/**
 		 * Coordinate scheme for the board To create a blank board, the YAXIS has been
 		 * split into two parts A-E and F-I.
@@ -86,25 +88,26 @@ public class Layout {
 			}
 			break;
 		case 4:// 4-Player Game Formation
-			for(String k: LayoutMap.keySet()) {
-				if(k.charAt(1)=='A' && k.charAt(0)!= '1'|| k.equals("3B") || k.equals("4B")|| k.equals("5B")
-						|| k.equals("4C")|| k.equals("5C")) {
+			for (String k : LayoutMap.keySet()) {
+				if (k.charAt(1) == 'A' && k.charAt(0) != '1' || k.equals("3B") || k.equals("4B") || k.equals("5B")
+						|| k.equals("4C") || k.equals("5C")) {
 					LayoutMap.replace(k, Marble.EE, Marble.BB);
-				} else if (k.charAt(0)=='1' && k.charAt(1)!='A' || k.equals("2C") || k.equals("2D")|| k.equals("2E")
-						|| k.equals("3E") || k.equals("3D")) {
+				} else if (k.charAt(0) == '1' && k.charAt(1) != 'A' || k.equals("2C") || k.equals("2D")
+						|| k.equals("2E") || k.equals("3E") || k.equals("3D")) {
 					LayoutMap.replace(k, Marble.EE, Marble.WW);
-				} else if (k.charAt(0)=='9' && k.charAt(1)!='I' || k.equals("8E") || k.equals("8F")|| k.equals("8G")
-						|| k.equals("7E") || k.equals("7F")) {
+				} else if (k.charAt(0) == '9' && k.charAt(1) != 'I' || k.equals("8E") || k.equals("8F")
+						|| k.equals("8G") || k.equals("7E") || k.equals("7F")) {
 					LayoutMap.replace(k, Marble.EE, Marble.RR);
-				}else if (k.charAt(1)=='I' && k.charAt(0)!= '9' || k.equals("5H") || k.equals("6H")|| k.equals("7H")
-						|| k.equals("5G") || k.equals("6G")) {
+				} else if (k.charAt(1) == 'I' && k.charAt(0) != '9' || k.equals("5H") || k.equals("6H")
+						|| k.equals("7H") || k.equals("5G") || k.equals("6G")) {
 					LayoutMap.replace(k, Marble.EE, Marble.YY);
 				}
 			}
 			break;
-		} 
+		}
 	}
-	public Map<String,Marble> returnLayoutMap(){
+
+	public Map<String, Marble> returnLayoutMap() {
 		return LayoutMap;
 	}
 }

@@ -4,17 +4,16 @@ import features.Board;
 import features.Layout;
 import features.Move;
 import features.Marble;
+
 public class MovementDisplayTest {
 	public static void main(String[] args) {
-		Board board = new Board(new Layout(3));
+		Board board = new Board(new Layout(2));
 		Move m = new Move();
-		m.MoveW(Marble.WW, "9I","9H","9G");
-		m.MoveE(Marble.YY, "5H","3F","4G");
-		m.MoveE(Marble.YY, "1E");
-		m.MoveW(Marble.YY, "2E");
-		m.MoveW(Marble.WW, "7I");
-		
-		
+		m.MoveNE(Marble.BB, "3C", "2B", "1A");
+		m.MoveSW(Marble.BB, "3C", "2B", "4D");
+		m.MoveNW(Marble.BB, "5A", "5C", "5B");
+		m.MoveSE(Marble.BB, "5D", "5C", "5B");
+
 		System.out.print("    ");
 		for (String k : Board.map.keySet()) {
 			if (k.equals("9I")) {
