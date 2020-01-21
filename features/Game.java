@@ -10,7 +10,7 @@ public class Game {
 	 * Creates a Board with the number of players as parameters (MIGHT ADD game sizee too but thats for later)
 	 */
 	public Game(Player ...players) {
-		board = new Board(2);
+		board = new Board(new Layout(2));
 		int NUMBER_PLAYERS = players.length;
 		int playerpos=0;
 		players = new Player[NUMBER_PLAYERS];

@@ -6,9 +6,15 @@ import features.Move;
 import features.Marble;
 public class MovementDisplayTest {
 	public static void main(String[] args) {
-		Board board = new Board(new Layout(2));
+		Board board = new Board(new Layout(3));
 		Move m = new Move();
-		m.MoveNW(Marble.BB, "3C","4C","5C");
+		m.MoveW(Marble.WW, "9I","9H","9G");
+		m.MoveE(Marble.YY, "5H","3F","4G");
+		m.MoveE(Marble.YY, "1E");
+		m.MoveW(Marble.YY, "2E");
+		m.MoveW(Marble.WW, "7I");
+		
+		
 		System.out.print("    ");
 		for (String k : Board.map.keySet()) {
 			if (k.equals("9I")) {
