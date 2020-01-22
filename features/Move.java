@@ -63,7 +63,7 @@ public class Move {
 			}
 	}
 	public int pushthreevsEnemyMarbles() {
-		
+		return 1;
 	}
 
 	public boolean moveWithoutPushing(String pos, int direction, Marble m) {
@@ -79,7 +79,7 @@ public class Move {
 
 	public boolean moveWithoutPushing(String pos1, String pos2, int direction, Marble m) {
 		String headcoord; String endcoord;
-		if(nextCoordinates(pos1, direction) == pos2) {
+		if(nextCoordinates(pos1, direction).equals(pos2)) {
 			headcoord = pos2;
 			endcoord = pos1;
 		} else {
@@ -102,7 +102,7 @@ public class Move {
 		String headcoord; String endcoord;
 		list.add(pos1); list.add(pos2); list.add(pos3);
 		Collections.sort(list);
-		if(nextCoordinates(list.get(1), direction)==list.get(0)){
+		if(nextCoordinates(list.get(1), direction).equals(list.get(0))){
 			headcoord = list.get(0);
 			endcoord = list.get(2);
 		} else {
@@ -137,16 +137,14 @@ public class Move {
 			} else if(pushtwovsEnemyMarbles(headcoord, direction, m) <= 1) {
 				Board.map.put(endcoord,Marble.EE);
 				String nextcoord = nextheadcoord;
-				while(Board.getMarble(nextcoord)!=Marble.EE) {
-					Marble headMarble = Board.getMarble(headcoord);
-					Board.map.put(nextheadcoord,headMarble);
-					Marble 
-					/**
-					 * Please I have autism i need to fix
-					 * Remember
-					 * Remember
-					 * Remember or u fail ur project
-					 */
+				Marble headMarble = Board.getMarble(headcoord);
+				System.out.println(headcoord);
+				while(Board.getMarble(nextcoord)!=Marble.EE && Board.getMarble(nextcoord)!=null) {
+					Marble temp = Board.getMarble(nextcoord);
+					Board.map.put(nextcoord,headMarble);
+					headMarble = temp;
+					headcoord = nextcoord;
+					nextcoord = nextCoordinates(headcoord, direction);
 				}
 				if(Board.getMarble(nextcoord)==null) {
 					
