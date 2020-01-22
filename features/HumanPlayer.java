@@ -3,9 +3,6 @@ package features;
 
 /**
  * Class for maintaining a human player in Abalone.
- * 
- * @author Theo Ruys
- * @version $Revision: 1.4 $
  */
 public class HumanPlayer extends Player {
 

@@ -19,7 +19,7 @@ public abstract class Player {
     /**
      * Creates a new Player object.
      * @requires name is not null
-     * @requires Marble is either Black, White, Blue or Red
+     * @requires Marble is either Black, White, Yellow or Red
      * @ensures the Name of this player will be name
      * @ensures the Marble of this player will be Marble
      */

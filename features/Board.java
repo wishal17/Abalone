@@ -34,6 +34,42 @@ public class Board {
 		return false;
 	}
 
+	public boolean isPlayersMarble(Marble m, String s) {
+		if (map.get(s) != m) {
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean isValidCoordinate(String s) {
+		if (map.containsKey(s)) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean validMove(Marble m, String s) {
+		return isPlayersMarble(m, s) && isValidCoordinate(s);
+	}
+
+	boolean hasLoser(Marble m) {
+		int count = 0;
+		for (String key : map.keySet()) {
+			if (map.get(key) == m) {
+				count++;
+			}
+		}
+		if(count <= 8) {
+			return true;
+		}
+		return false;
+	}
+
+
+	public void makeMove(Move m) {
+
+	}
+
 	public static void main(String[] args) {
 
 	}
