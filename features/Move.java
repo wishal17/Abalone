@@ -6,49 +6,70 @@ import java.util.List;
 import java.util.Map;
 
 public class Move {
+	/**
+	 * 
+	 * @param a
+	 * @return gives the proceeding YAXIS value
+	 */
 	public char nextYAXIS(char a) {
 		return ++a;
 	}
-
+	/**
+	 * 
+	 * @param a
+	 * @return gives the preceeding YAXIS value
+	 */
 	public char previousYAXIS(char a) {
 		return --a;
 	}
-
+	/**
+	 * 
+	 * @param pos
+	 * @param direction
+	 * @return the next coordinate in the given direction
+	 */
 	public String nextCoordinates(String pos, int direction) {
-		String newpos = "";
+		String newposition = "";
 		if (Board.isValidCoordinate(pos)) {
 			int num = Character.getNumericValue(pos.charAt(0));
 			char YAXIS = pos.charAt(1);
 
 			switch (direction) {
 			case 1:
-				newpos = "" + num + nextYAXIS(YAXIS);
+				newposition = "" + num + nextYAXIS(YAXIS);
 				break;
 			case 2:
-				newpos = "" + (num + 1) + nextYAXIS(YAXIS);
+				newposition = "" + (num + 1) + nextYAXIS(YAXIS);
 				break;
 			case 3:
-				newpos = "" + (num + 1) + YAXIS;
+				newposition = "" + (num + 1) + YAXIS;
 				break;
 			case 4:
-				newpos = "" + num + previousYAXIS(YAXIS);
+				newposition = "" + num + previousYAXIS(YAXIS);
 				break;
 			case 5:
-				newpos = "" + (num - 1) + previousYAXIS(YAXIS);
+				newposition = "" + (num - 1) + previousYAXIS(YAXIS);
 				break;
 			case 6:
-				newpos = "" + (num - 1) + YAXIS;
+				newposition = "" + (num - 1) + YAXIS;
 				break;
 			default:
-				newpos = null;
+				newposition = null;
 			}
 		}
-		if (Board.isValidCoordinate(newpos)) {
-			return newpos;
+		if (Board.isValidCoordinate(newposition)) {
+			return newposition;
 		}
 		return null;
 	}
 
+	/**
+	 * 
+	 * @param pos
+	 * @param direction
+	 * @param m
+	 * @return true if the move is successful else returns false.
+	 */
 	public boolean pushtwovsEnemyMarbles(String pos, int direction, Marble m) {
 		String onenexttohead = nextCoordinates(pos, direction);
 		String twonexttohead = nextCoordinates(onenexttohead, direction);
@@ -70,7 +91,14 @@ public class Move {
 		}
 		return false;
 	}
-
+	
+	/**
+	 * 
+	 * @param pos
+	 * @param direction
+	 * @param m
+	 * @return true if the move is successful else returns false.
+	 */
 	public boolean pushthreevsEnemyMarbles(String pos, int direction, Marble m) {
 		String onenexttohead = nextCoordinates(pos, direction);
 		String twonexttohead = nextCoordinates(onenexttohead, direction);
@@ -94,6 +122,13 @@ public class Move {
 		return false;
 	}
 
+	/**
+	 * Moves a single marble in a given direction without pushing any opponent marbles
+	 * @param pos
+	 * @param direction
+	 * @param m
+	 * @return true if the move is successful else returns false.
+	 */
 	public boolean moveWithoutPushing(String pos, int direction, Marble m) {
 		String nextcoordspos = nextCoordinates(pos, direction);
 		if (Board.map.get(pos) == m && !Board.hasMarble(nextcoordspos)) {
@@ -104,6 +139,14 @@ public class Move {
 		return false;
 	}
 
+	/**
+	 * Moves a pair of marbles in a given direction without pushing any opponent marbles
+	 * @param pos1
+	 * @param pos2
+	 * @param direction
+	 * @param m
+	 * @return true if the move is successful else returns false.
+	 */
 	public boolean moveWithoutPushing(String pos1, String pos2, int direction, Marble m) {
 		String headcoord;
 		String endcoord;
@@ -137,6 +180,15 @@ public class Move {
 
 	}
 
+	/**
+	 * Moves three marbles in a given direction without pushing any opponent marbles
+	 * @param pos1
+	 * @param pos2
+	 * @param pos3
+	 * @param direction
+	 * @param m
+	 * @return true if the move is successful else returns false.
+	 */
 	public boolean moveWithoutPushing(String pos1, String pos2, String pos3, int direction, Marble m) {
 		List<String> list = new ArrayList<String>();
 		String headcoord;
@@ -181,7 +233,15 @@ public class Move {
 		}
 
 	}
-
+	
+	/**
+	 * Moves two marbles in a given direction by pushing opponent marbles
+	 * @param pos1
+	 * @param pos2
+	 * @param direction
+	 * @param m
+	 * @return true if the move is successful else returns false.
+	 */
 	public boolean moveWithPushing(String pos1, String pos2, int direction, Marble m) {
 		String headcoord;
 		String endcoord;
@@ -214,6 +274,15 @@ public class Move {
 		return false;
 	}
 
+	/**
+	 * Moves three marbles in a given direction by pushing opponent marbles
+	 * @param pos1
+	 * @param pos2
+	 * @param pos3
+	 * @param direction
+	 * @param m
+	 * @return
+	 */
 	public boolean moveWithPushing(String pos1, String pos2, String pos3, int direction, Marble m) {
 		List<String> list = new ArrayList<String>();
 		String headcoord;
