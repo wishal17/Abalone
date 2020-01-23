@@ -2,21 +2,35 @@ package features;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class Board {
-	private static final char[] XAXIS = "123456789".toCharArray();
-	private static final char[] YAXIS = "ABCDEFGHI".toCharArray();
-	private Marble[] values;
-	private Layout layout;
+	private static Layout layout;
 	public static Map<String, Marble> map = new LinkedHashMap<String, Marble>();
-
+	public static List<Marble> eliminated = new LinkedList<Marble>();
 	/*
 	 * Creates a board with the specified layout
 	 */
 	public Board(Layout l) {
-		this.layout = layout;
+		this.layout = l;
 		map = l.returnLayoutMap();
+	}
+	
+	public static Layout getLayout() {
+		return layout;
+	}
+	
+	public static int gamemode(Layout l) {
+		if(l.returnPlayers().equals("two")) {
+			return 2;
+		} else if (l.returnPlayers().equals("three")) {
+			return 3;
+		} else if(l.returnPlayers().equals("four")){
+			return 4;
+		}
+		return -1;
 	}
 
 	public Map<String, Marble> returnBoardMap() {

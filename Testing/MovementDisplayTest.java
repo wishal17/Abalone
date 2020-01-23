@@ -9,18 +9,13 @@ public class MovementDisplayTest {
 	public static void main(String[] args) {
 		Board board = new Board(new Layout(2));
 		Move m = new Move();
-		m.moveWithoutPushing("7I", "7H", "7G", 4, Marble.WW);
-		m.moveWithoutPushing("7F", "7H", "7G", 4, Marble.WW);
-		m.moveWithoutPushing("7F", "7E", "7G", 4, Marble.WW);
-		m.moveWithoutPushing("7F", "7E", "7D", 4, Marble.WW);
-		m.moveWithoutPushing("7C", "7E", "7D", 4, Marble.WW);
-		m.moveWithoutPushing("4C","5C", 3, Marble.BB);
-		m.moveWithoutPushing("5C","6C", 3, Marble.BB);
-		System.out.print("    ");
+	 	System.out.println(Board.eliminated);
+	 	System.out.print("    ");
 		for (String k : Board.map.keySet()) {
 			if (k.equals("9I")) {
 				System.out.print(k + " ");
 				System.out.println();
+				
 			} else if (k.charAt(1) == 'I') {
 				System.out.print(k + " ");
 			}

@@ -10,6 +10,7 @@ public class Layout {
 	private static final char[] XAXIS = "123456789".toCharArray();
 	private static final char[] YAXIS = "ABCDEFGHI".toCharArray();
 	private Marble[] values;
+	private String players;
 	private Map<String, Marble> LayoutMap = new LinkedHashMap<String, Marble>();
 
 	public Layout(int layout) {
@@ -71,6 +72,7 @@ public class Layout {
 				LayoutMap.replace(k, Marble.EE, values[twoplayerlayout]);
 				twoplayerlayout++;
 			}
+			players = "two";
 			break;
 
 		case 3:// 3-Player Game Formation
@@ -86,6 +88,7 @@ public class Layout {
 					LayoutMap.replace(k, Marble.EE, Marble.YY);
 				}
 			}
+			players = "three";
 			break;
 		case 4:// 4-Player Game Formation
 			for (String k : LayoutMap.keySet()) {
@@ -103,11 +106,16 @@ public class Layout {
 					LayoutMap.replace(k, Marble.EE, Marble.YY);
 				}
 			}
+			players = "four";
 			break;
 		}
 	}
 
 	public Map<String, Marble> returnLayoutMap() {
 		return LayoutMap;
+	}
+	
+	public String returnPlayers() {
+		return players;
 	}
 }
