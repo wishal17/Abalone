@@ -7,53 +7,102 @@ import java.util.Map;
  * Class responsible for different marble layouts depending on the number of players
  */
 public class Layout {
-	private static final char[] XAXIS = "123456789".toCharArray();
-	private static final char[] YAXIS = "ABCDEFGHI".toCharArray();
 	private Marble[] values;
-	private String players;
 	private Map<String, Marble> LayoutMap = new LinkedHashMap<String, Marble>();
-
+	private String players;
 	public Layout(int layout) {
 		/**
 		 * Coordinate scheme for the board To create a blank board, the YAXIS has been
 		 * split into two parts A-E and F-I.
 		 */
 		// For X AXIS coordinates A-E
-		for (char a : YAXIS) {
-			if (a == 'F') {
-				break;
-			}
-			for (int i = 1; i <= 9; i++) {
-				if (a == 'A' && i == 6) {
-					break;
-				}
-				if (a == 'B' && i == 7) {
-					break;
-				}
-				if (a == 'C' && i == 8) {
-					break;
-				}
-				if (a == 'D' && i == 9) {
-					break;
-				}
-				if (a == 'E' && i == 10) {
-					break;
-				}
-				LayoutMap.put(i + "" + a, Marble.EE);
-			}
-		}
-		// For Y AXIS coordinates F-I
-		int incrementer = 2;
-		int starting = 2;
-		for (char a = 'F'; a <= 'I'; a++) {
-			while (incrementer <= 9) {
-				LayoutMap.put(incrementer + "" + a, Marble.EE);
-				incrementer++;
-			}
-			starting++;
-			incrementer = starting;
-		}
 
+		// "letter" is the string that temporarily holds the letter
+		String letter = "";
+		
+		// "number" is the string that temporarily holds the number
+		String number = "";
+		
+		// the boolean yComplete will be set to false when all x values for one y axis are added to LayoutMap
+		boolean yIncomplete = true;
+		
+		// the integer n holds the value that will be put into the string "number"
+		int n = 1;
+
+		for (int l = 1; l <= 9; l++) {
+			yIncomplete = true;
+			n = 1;
+			while (yIncomplete == true) {
+				switch (l) {
+				case 1:
+					if (n <= 4) {
+						n = 5;
+					}
+					letter = "I";
+					number = "" + n;
+					break;
+				case 2:
+					if (n <= 3) {
+						n = 4;
+					}
+					letter = "H";
+					number = "" + n;
+					break;
+				case 3:
+					if (n <= 2) {
+						n = 3;
+					}
+					letter = "G";
+					number = "" + n;
+					break;
+				case 4:
+					if (n <= 1) {
+						n = 2;
+					}
+					letter = "F";
+					number = "" + n;
+					break;
+				case 5:
+					letter = "E";
+					number = "" + n;
+					break;
+				case 6:
+					if (n >= 9) {
+						break;
+					}
+					letter = "D";
+					number = "" + n;
+					break;
+				case 7:
+					if (n >= 8) {
+						break;
+					}
+					letter = "C";
+					number = "" + n;
+					break;
+				case 8:
+					if (n >= 7) {
+						break;
+					}
+					letter = "B";
+					number = "" + n;
+					break;
+				case 9:
+					if (n >= 6) {
+						break;
+					}
+					letter = "A";
+					number = "" + n;
+					break;
+				}
+				LayoutMap.put(number + letter, Marble.EE);
+				n++;
+				if (n > 9) {
+					yIncomplete = false;
+				}
+			}
+		}
+		
 		switch (layout) {
 
 		case 2: // 2-Player Game Formation.
@@ -114,7 +163,6 @@ public class Layout {
 	public Map<String, Marble> returnLayoutMap() {
 		return LayoutMap;
 	}
-	
 	public String returnPlayers() {
 		return players;
 	}

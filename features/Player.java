@@ -3,9 +3,6 @@ package features;
 
 /**
  * Abstract class for keeping a player in Abalone.
- * 
- * 
- * @author wisha
  */
 public abstract class Player {
 
@@ -51,7 +48,7 @@ public abstract class Player {
      * @param board the current game board
      * @return the player's choice
      */
-    public abstract int determineMove(Board board);
+    public abstract void determineMove(Board board);
 
     // -- Commands ---------------------------------------------------
 
@@ -61,8 +58,7 @@ public abstract class Player {
      * @param board the current board
      */
     public void makeMove(Board board) {
-        int choice = determineMove(board);
-        //board.setField(choice, getMarble());
+        determineMove(board);
     }
 
 }

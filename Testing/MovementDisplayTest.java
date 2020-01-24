@@ -8,9 +8,8 @@ import features.Marble;
 public class MovementDisplayTest {
 	public static void main(String[] args) {
 		Board board = new Board(new Layout(2));
-		Move m = new Move();
-   
 	 	System.out.println(Board.eliminated);
+	 	
 	 	System.out.print("    ");
 		for (String k : Board.map.keySet()) {
 			if (k.equals("9I")) {

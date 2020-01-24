@@ -7,28 +7,32 @@ import java.util.Map;
 
 public class Move {
 	/**
+	 * Increments the YAXIS of the coordinate
 	 * 
 	 * @param a
-	 * @return gives the proceeding YAXIS value
+	 * @return gives the next YAXIS value
 	 */
-	public char nextYAXIS(char a) {
+	public static char nextYAXIS(char a) {
 		return ++a;
 	}
+
 	/**
+	 * Decrements the YAXIS of the coordinate
 	 * 
 	 * @param a
-	 * @return gives the preceeding YAXIS value
+	 * @return gives the previous YAXIS value
 	 */
-	public char previousYAXIS(char a) {
+	public static char previousYAXIS(char a) {
 		return --a;
 	}
+
 	/**
 	 * 
 	 * @param pos
 	 * @param direction
 	 * @return the next coordinate in the given direction
 	 */
-	public String nextCoordinates(String pos, int direction) {
+	public static String nextCoordinates(String pos, int direction) {
 		String newposition = "";
 		if (Board.isValidCoordinate(pos)) {
 			int num = Character.getNumericValue(pos.charAt(0));
@@ -64,6 +68,8 @@ public class Move {
 	}
 
 	/**
+	 * Checks if there are more team/player marbles than opponent marbles for
+	 * pushing
 	 * 
 	 * @param pos
 	 * @param direction
@@ -91,13 +97,15 @@ public class Move {
 		}
 		return false;
 	}
-	
+
 	/**
+	 * Checks if there are more team/player marbles than opponent marbles for
+	 * pushing
 	 * 
 	 * @param pos
 	 * @param direction
 	 * @param m
-	 * @return true if the move is successful else returns false.
+	 * @return true if the move is possibles else returns false.
 	 */
 	public boolean pushthreevsEnemyMarbles(String pos, int direction, Marble m) {
 		String onenexttohead = nextCoordinates(pos, direction);
@@ -123,7 +131,9 @@ public class Move {
 	}
 
 	/**
-	 * Moves a single marble in a given direction without pushing any opponent marbles
+	 * Moves a single marble in a given direction without pushing any opponent
+	 * marbles
+	 * 
 	 * @param pos
 	 * @param direction
 	 * @param m
@@ -140,7 +150,9 @@ public class Move {
 	}
 
 	/**
-	 * Moves a pair of marbles in a given direction without pushing any opponent marbles
+	 * Moves a pair of marbles in a given direction without pushing any opponent
+	 * marbles
+	 * 
 	 * @param pos1
 	 * @param pos2
 	 * @param direction
@@ -182,6 +194,7 @@ public class Move {
 
 	/**
 	 * Moves three marbles in a given direction without pushing any opponent marbles
+	 * 
 	 * @param pos1
 	 * @param pos2
 	 * @param pos3
@@ -233,9 +246,10 @@ public class Move {
 		}
 
 	}
-	
+
 	/**
 	 * Moves two marbles in a given direction by pushing opponent marbles
+	 * 
 	 * @param pos1
 	 * @param pos2
 	 * @param direction
@@ -263,12 +277,13 @@ public class Move {
 					Board.map.put(onenextheadcoord, m);
 					Board.map.put(endcoord, Marble.EE);
 					Board.eliminated.add(onenexttoheadMarble);
+					return true;
 				} else if (Board.getMarble(twonextheadcoord) == Marble.EE) {
 					Board.map.put(twonextheadcoord, onenexttoheadMarble);
 					Board.map.put(onenextheadcoord, m);
 					Board.map.put(endcoord, Marble.EE);
+					return true;
 				}
-				return true;
 			}
 		}
 		return false;
@@ -276,6 +291,7 @@ public class Move {
 
 	/**
 	 * Moves three marbles in a given direction by pushing opponent marbles
+	 * 
 	 * @param pos1
 	 * @param pos2
 	 * @param pos3
@@ -304,7 +320,7 @@ public class Move {
 		String onenextheadcoord = nextCoordinates(headcoord, direction);
 		String twonextheadcoord = nextCoordinates(onenextheadcoord, direction);
 		String threenextheadcoord = nextCoordinates(twonextheadcoord, direction);
-		
+
 		if (Board.map.get(pos1) == m && Board.map.get(pos2) == m && Board.map.get(pos3) == m
 				&& (Board.hasMarble(onenextheadcoord) || Board.hasMarble(twonextheadcoord))) {
 			if (pushthreevsEnemyMarbles(headcoord, direction, m) == false) {
@@ -312,11 +328,7 @@ public class Move {
 			} else if (pushthreevsEnemyMarbles(headcoord, direction, m) == true) {
 				Marble onenexttoheadMarble = Board.getMarble(onenextheadcoord);
 				Marble twonexttoheadMarble = Board.getMarble(twonextheadcoord);
-				Marble threenexttoheadMarble = Board.getMarble(threenextheadcoord);
 				if (twonexttoheadMarble == null) {
-					System.out.println(endcoord);
-					System.out.println(midcoord);
-					System.out.println(headcoord);
 					Board.map.put(endcoord, Marble.EE);
 					moveWithPushing(midcoord, headcoord, direction, m);
 					Board.map.put(midcoord, m);
@@ -335,7 +347,6 @@ public class Move {
 						Board.map.put(endcoord, Marble.EE);
 						return true;
 					}
-					return true;
 				}
 
 			}
