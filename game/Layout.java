@@ -1,4 +1,4 @@
-package features;
+package game;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

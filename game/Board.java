@@ -1,4 +1,4 @@
-package features;
+package game;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,7 +74,6 @@ public class Board {
 	}
 
 	/**
-	 * NEEDS TO BE IMPLEMENTED NOT DONE YET YEEET
 	 * 
 	 * @return if the game has a winner
 	 */
@@ -201,9 +200,6 @@ public class Board {
 		} else {
 			headcoord = pos1;
 		}
-		System.out.println(pos1);
-		System.out.println(pos2);
-		System.out.println(headcoord);
 		if (Board.getMarble(Move.nextCoordinates(headcoord, direction)) == Marble.EE) {
 			return move.moveWithoutPushing(pos1, pos2, direction, m);
 		} else {

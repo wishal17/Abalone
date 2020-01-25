@@ -1,9 +1,9 @@
-package Testing;
+package testing;
 
-import features.Board;
-import features.Layout;
-import features.Move;
-import features.Marble;
+import game.Board;
+import game.Layout;
+import game.Marble;
+import game.Move;
 
 public class MovementDisplayTest {
 	public static void main(String[] args) {

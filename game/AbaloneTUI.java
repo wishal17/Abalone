@@ -1,4 +1,4 @@
-package features;
+package game;
 
 import java.util.Scanner;
 
@@ -18,8 +18,8 @@ public class AbaloneTUI {
 			sc = new Scanner(System.in);
 			System.out.println("Enter Player 2 name");
 			String p2input = sc.nextLine();
-			Player p1 = new HumanPlayer(p1input, Marble.BB);
-			Player p2 = new HumanPlayer(p2input, Marble.WW);
+			Player p1 = new HumanPlayer(p1input, Marble.WW);
+			Player p2 = new HumanPlayer(p2input, Marble.BB);
 			Game game = new Game(p1, p2);
 			game.start();
 		} else if(playernum == 3) {
@@ -32,8 +32,8 @@ public class AbaloneTUI {
 			sc = new Scanner(System.in);
 			System.out.println("Enter Player 3 name");
 			String p3input = sc.nextLine();
-			Player p1 = new HumanPlayer(p1input, Marble.BB);
-			Player p2 = new HumanPlayer(p2input, Marble.WW);
+			Player p1 = new HumanPlayer(p1input, Marble.WW);
+			Player p2 = new HumanPlayer(p2input, Marble.BB);
 			Player p3 = new HumanPlayer(p3input, Marble.YY);
 			Game game = new Game(p1, p2, p3);
 			game.start();
@@ -50,9 +50,9 @@ public class AbaloneTUI {
 			sc = new Scanner(System.in);
 			System.out.println("Enter Player 4 name");
 			String p4input = sc.nextLine();
-			Player p1 = new HumanPlayer(p1input, Marble.BB);
-			Player p2 = new HumanPlayer(p2input, Marble.WW);
-			Player p3 = new HumanPlayer(p3input, Marble.YY);
+			Player p1 = new HumanPlayer(p1input, Marble.WW);
+			Player p2 = new HumanPlayer(p2input, Marble.YY);
+			Player p3 = new HumanPlayer(p3input, Marble.BB);
 			Player p4 = new HumanPlayer(p4input, Marble.RR);
 			Game game = new Game(p1, p2, p3, p4);
 			game.start();

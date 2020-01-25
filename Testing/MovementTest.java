@@ -1,16 +1,17 @@
-package Testing;
+package testing;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.BeforeEach;
 
-import features.Board;
-import features.Layout;
-import features.Marble;
-import features.Move;
+import game.Board;
+import game.Layout;
+import game.Marble;
+import game.Move;
+
+import org.junit.jupiter.api.BeforeEach;
 
 public class MovementTest {
 

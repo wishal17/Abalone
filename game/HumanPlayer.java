@@ -1,4 +1,4 @@
-package features;
+package game;
 
 import java.util.Scanner;
 
@@ -44,7 +44,6 @@ public class HumanPlayer extends Player {
 		int direction = Integer.parseInt(split[2]);
 		Marble marble = getMarble();
 		boolean valid = true;
-		
 		if (move.length() == 6) {
 			pos1 = move.charAt(0) + "" + move.charAt(1);
 			pos2 = move.charAt(2) + "" + move.charAt(3);
@@ -64,6 +63,10 @@ public class HumanPlayer extends Player {
             System.out.println(prompt);
             sc = new Scanner(System.in);
     		command = sc.nextLine();
+       		String spliterror[] = command.split(";");
+    		move = spliterror[1];
+    		direction = Integer.parseInt(spliterror[2]);
+    		marble = getMarble();
             if (move.length() == 6) {
     			pos1 = move.charAt(0) + "" + move.charAt(1);
     			pos2 = move.charAt(2) + "" + move.charAt(3);

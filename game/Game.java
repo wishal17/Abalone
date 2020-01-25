@@ -1,4 +1,6 @@
-package features;
+package game;
+
+import java.util.Scanner;
 
 public class Game {
 	private Board board;
@@ -12,22 +14,22 @@ public class Game {
 	public Game(Player... p) {
 		int NUMBER_PLAYERS = p.length;
 		players = new Player[NUMBER_PLAYERS];
-			if (p.length == 4) {
-				board = new Board(new Layout(4));
-				players[0] = p[0];
-				players[1] = p[1];
-				players[2] = p[2];
-				players[3] = p[3];
-			} else if (p.length == 3) {
-				board = new Board(new Layout(3));
-				players[0] = p[0];
-				players[1] = p[1];
-				players[2] = p[2];
-			} else if (p.length == 2) {
-				board = new Board(new Layout(2));
-				players[0] = p[0];
-				players[1] = p[1];
-			}
+		if (p.length == 4) {
+			board = new Board(new Layout(4));
+			players[0] = p[0];
+			players[1] = p[1];
+			players[2] = p[2];
+			players[3] = p[3];
+		} else if (p.length == 3) {
+			board = new Board(new Layout(3));
+			players[0] = p[0];
+			players[1] = p[1];
+			players[2] = p[2];
+		} else if (p.length == 2) {
+			board = new Board(new Layout(2));
+			players[0] = p[0];
+			players[1] = p[1];
+		}
 	}
 
 	public void start() {
@@ -35,6 +37,10 @@ public class Game {
 		while (continueGame) {
 			reset();
 			play();
+			System.out.println("\n> Play another time? (true/false)?");
+			Scanner sc = new Scanner(System.in);
+			continueGame = sc.nextBoolean();
+			sc.close();
 		}
 	}
 
@@ -61,6 +67,10 @@ public class Game {
 				}
 				players[1].makeMove(board);
 				update();
+				if (board.gameOver() == true) {
+					printResult();
+					return;
+				}
 			}
 		} else if (Board.gamemode(Board.getLayout()) == 3) {
 			while (board.gameOver() != true) {
@@ -78,6 +88,10 @@ public class Game {
 				}
 				players[2].makeMove(board);
 				update();
+				if (board.gameOver() == true) {
+					printResult();
+					return;
+				}
 			}
 		} else if (Board.gamemode(Board.getLayout()) == 4) {
 			while (board.gameOver() != true) {
@@ -101,6 +115,10 @@ public class Game {
 				}
 				players[3].makeMove(board);
 				update();
+				if (board.gameOver() == true) {
+					printResult();
+					return;
+				}
 			}
 		}
 
@@ -124,8 +142,10 @@ public class Game {
 			System.out.println("Draw. There is no winner!");
 		}
 	}
-	//needs to be changed
+
+	// needs to be changed
 	private void update() {
-		System.out.println("\ncurrent game situation: \n\n" + board.printBoardCoords() + "\n"+"\n"+board.printBoardValues());
+		System.out.println(
+				"\ncurrent game situation: \n\n" + board.printBoardCoords() + "\n" + "\n" + board.printBoardValues());
 	}
 }

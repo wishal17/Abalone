@@ -1,7 +1,7 @@
-package Testing;
+package testing;
 
-import features.Board;
-import features.Layout;
+import game.Board;
+import game.Layout;
 
 public class BoardDisplayTest {
 	public static void main(String[] args) {

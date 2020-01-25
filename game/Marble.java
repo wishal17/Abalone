@@ -1,4 +1,4 @@
-package features;
+package game;
  public enum Marble {
 	EE, BB, WW, YY, RR;
 
