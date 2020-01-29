@@ -106,7 +106,7 @@ public class Client{
 	 * @param msg the message to write to the OutputStream.
 	 * @throws ServerUnavailableException if IO errors occur.
 	 */
-	public synchronized void sendMessage(String msg) 
+	public void sendMessage(String msg) 
 			throws ServerUnavailableException {
 		if (out != null) {
 			try {
@@ -215,7 +215,7 @@ public class Client{
 	public void joinRoom(String roomnum) throws ServerUnavailableException {
 		if (!roomnum.equals(null)) {
 			sendMessage(String.valueOf(ProtocolMessages.JOIN)+ String.valueOf(ProtocolMessages.DELIMITER) + roomnum);
-			System.out.println("join bruda");
+			//System.out.println("join bruda");
 			showMessage(">"+readLineFromServer());
 		} else {
 			showMessage("The room does not exist");
@@ -247,7 +247,7 @@ public class Client{
 	}
 
 	public void showMessage(String message) {
-		System.out.print(message);
+		System.out.println(message);
 	}
 
 }

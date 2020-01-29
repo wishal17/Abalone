@@ -143,16 +143,16 @@ public class Layout {
 			for (String k : LayoutMap.keySet()) {
 				if (k.charAt(1) == 'A' && k.charAt(0) != '1' || k.equals("3B") || k.equals("4B") || k.equals("5B")
 						|| k.equals("4C") || k.equals("5C")) {
-					LayoutMap.replace(k, Marble.EE, Marble.BB);
+					LayoutMap.replace(k, Marble.EE, Marble.YY);
 				} else if (k.charAt(0) == '1' && k.charAt(1) != 'A' || k.equals("2C") || k.equals("2D")
 						|| k.equals("2E") || k.equals("3E") || k.equals("3D")) {
-					LayoutMap.replace(k, Marble.EE, Marble.RR);
+					LayoutMap.replace(k, Marble.EE, Marble.WW);
 				} else if (k.charAt(0) == '9' && k.charAt(1) != 'I' || k.equals("8E") || k.equals("8F")
 						|| k.equals("8G") || k.equals("7E") || k.equals("7F")) {
-					LayoutMap.replace(k, Marble.EE, Marble.YY);
+					LayoutMap.replace(k, Marble.EE, Marble.BB);
 				} else if (k.charAt(1) == 'I' && k.charAt(0) != '9' || k.equals("5H") || k.equals("6H")
 						|| k.equals("7H") || k.equals("5G") || k.equals("6G")) {
-					LayoutMap.replace(k, Marble.EE, Marble.WW);
+					LayoutMap.replace(k, Marble.EE, Marble.RR);
 				}
 			}
 			players = "four";

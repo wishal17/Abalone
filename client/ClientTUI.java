@@ -32,7 +32,7 @@ public class ClientTUI implements ClientView {
 		}
 		String name = "";
 		while(name.equals("")||name == null) {
-			name = getString("\n"+"E;NotConnected"+"\n"+"Please enter C;<name> to connect to the server:");
+			name = getString("E;NotConnected"+"Please enter C;<name> to connect to the server:");
 		}
 		client.start(name);
 
@@ -122,8 +122,7 @@ public class ClientTUI implements ClientView {
 		String ips = getString("Please enter the server IP address here: ");
 		InetAddress ip;
 		try {
-			ip = InetAddress.getByName("localhost");
-			System.out.println(ip);
+			ip = InetAddress.getByName(ips);
 		} catch (Exception e) {
 			System.out.println("Invalid IP. Please try again.");
 			return getIp();
