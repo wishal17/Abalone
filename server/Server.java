@@ -247,7 +247,7 @@ public class Server implements Runnable {
 			display = display + "\n";
 			
 		}
-		display = display + ProtocolMessages.EOT;
+		display = display + "lmao dab";
 		return display;
 	}
 

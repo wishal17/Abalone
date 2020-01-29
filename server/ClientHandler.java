@@ -76,7 +76,7 @@ public class ClientHandler implements Runnable {
 	}
 
 	public void sendMessage(String msg) throws IOException {
-		out.write(msg + System.lineSeparator() + ProtocolMessages.EOT);
+		out.write(msg);
 		out.flush();
 	}
 
@@ -114,7 +114,7 @@ public class ClientHandler implements Runnable {
 				hasNotShutDown = false;
 				break;
 			default:
-				out.write("Unknown command: " + s1 + System.lineSeparator() + ProtocolMessages.EOT);
+				out.write("Unknown command: " + s1);
 				out.flush();
 				break;
 			}
@@ -134,7 +134,7 @@ public class ClientHandler implements Runnable {
 				server.sendMessagetoRoom(server.leaderTeammate(s2), this);
 				break;
 			default:
-				out.write("Unknown command: " + s1 + System.lineSeparator() + ProtocolMessages.EOT);
+				out.write("Unknown command: " + s1);
 				out.flush();
 				break;
 			}
