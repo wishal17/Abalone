@@ -228,7 +228,7 @@ public class Client{
 	
 	public void displayRooms() throws ServerUnavailableException {
 		sendMessage(String.valueOf(ProtocolMessages.ROOM)+ String.valueOf(ProtocolMessages.DELIMITER));
-		showMessage(">"+readMultipleLinesFromServer());
+		showMessage(">"+readLineFromServer());
 	}
 	
 	public void leaderTeammate(String name) throws ServerUnavailableException {

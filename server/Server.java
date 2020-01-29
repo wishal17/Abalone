@@ -244,7 +244,7 @@ public class Server implements Runnable {
 			for (ClientHandler cl : r.getPlayerList()) {
 				display = display + cl.getClientHandlerName() + ProtocolMessages.DELIMITER;
 			}
-			display = display + "\n";
+			display = display + String.valueOf(ProtocolMessages.DELIMITER);
 			
 		}
 		display = display + "lmao dab";
