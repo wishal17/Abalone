@@ -245,7 +245,9 @@ public class Server implements Runnable {
 				display = display + cl.getClientHandlerName() + ProtocolMessages.DELIMITER;
 			}
 			display = display + "\n";
+			
 		}
+		display = display + ProtocolMessages.EOT;
 		return display;
 	}
 
