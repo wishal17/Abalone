@@ -7,11 +7,11 @@ public class AbaloneTUI {
 		System.out.println("Enter Number of Players");
 		Scanner sc = new Scanner(System.in);
 		int playernum = sc.nextInt();
-		while(playernum>4 || playernum <2) {
+		while (playernum > 4 || playernum < 2) {
 			System.out.println("Error! Enter number of players between 2-4");
 			playernum = sc.nextInt();
 		}
-		if(playernum == 2) {
+		if (playernum == 2) {
 			sc = new Scanner(System.in);
 			System.out.println("Enter Player 1 name");
 			String p1input = sc.nextLine();
@@ -22,7 +22,7 @@ public class AbaloneTUI {
 			Player p2 = new HumanPlayer(p2input, Marble.BB);
 			Game game = new Game(p1, p2);
 			game.start();
-		} else if(playernum == 3) {
+		} else if (playernum == 3) {
 			sc = new Scanner(System.in);
 			System.out.println("Enter Player 1 name");
 			String p1input = sc.nextLine();
@@ -37,7 +37,7 @@ public class AbaloneTUI {
 			Player p3 = new HumanPlayer(p3input, Marble.YY);
 			Game game = new Game(p1, p2, p3);
 			game.start();
-		} else if(playernum == 4) {
+		} else if (playernum == 4) {
 			sc = new Scanner(System.in);
 			System.out.println("Enter Player 1 name");
 			String p1input = sc.nextLine();
@@ -57,10 +57,6 @@ public class AbaloneTUI {
 			Game game = new Game(p1, p2, p3, p4);
 			game.start();
 		}
-		
-		
 
-		
-		
 	}
 }

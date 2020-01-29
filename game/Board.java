@@ -11,6 +11,7 @@ public class Board {
 	private static Layout layout;
 	public static Map<String, Marble> map = new LinkedHashMap<String, Marble>();
 	public static List<Marble> eliminated = new LinkedList<Marble>();
+	public static int turns = 0;
 
 	/*
 	 * Creates a board with the specified layout
@@ -28,6 +29,7 @@ public class Board {
 	 */
 	public Board deepCopy() {
 		Board copy = new Board(Board.layout);
+		copy.map = this.map;
 		return copy;
 	}
 
@@ -123,7 +125,7 @@ public class Board {
 		}
 		return false;
 	}
-	
+
 	public boolean isWinner(Marble m) {
 		int team1 = 0;
 		int team2 = 0;
@@ -133,13 +135,13 @@ public class Board {
 			for (Marble elims : eliminated) {
 				if (Marble.returnTeammate(m) == elims || m == elims) {
 					team1++;
-				} else{
+				} else {
 					team2++;
 				}
 			}
 			if (team1 == 6) {
 				return false;
-			} else if(team2 == 6) {
+			} else if (team2 == 6) {
 				return true;
 			}
 
@@ -153,7 +155,7 @@ public class Board {
 			}
 			if (opponent == 6) {
 				return true;
-			} else if(player ==6) {
+			} else if (player == 6) {
 				return false;
 			}
 
@@ -167,7 +169,7 @@ public class Board {
 			}
 			if (opponent == 6) {
 				return true;
-			} else if(player == 6) {
+			} else if (player == 6) {
 				return false;
 			}
 		}
@@ -175,17 +177,17 @@ public class Board {
 	}
 
 	public boolean isValidMove(String pos1, int direction, Marble m) {
-		return makeMove(pos1,direction, m);
+		return makeMove(pos1, direction, m);
 	}
-	
+
 	public boolean isValidMove(String pos1, String pos2, int direction, Marble m) {
 		return makeMove(pos1, pos2, direction, m);
 	}
-	
+
 	public boolean isValidMove(String pos1, String pos2, String pos3, int direction, Marble m) {
 		return makeMove(pos1, pos2, pos3, direction, m);
 	}
-	
+
 	public boolean makeMove(String pos1, int direction, Marble m) {
 		Move move = new Move();
 		return move.moveWithoutPushing(pos1, direction, m);
@@ -230,88 +232,89 @@ public class Board {
 	public void reset() {
 		map = Board.layout.returnLayoutMap();
 		eliminated.removeAll(eliminated);
+		turns = 0;
 	}
 
-	 public String printBoardCoords() {
-	        String board = "";
-	        String ds = " ";
-	        for (String k : Board.map.keySet()) {
-	        switch (k) {
-	        case "1A":
-	            board = board + ds + ds + ds + ds;
-	            break;
-	        case "1B":
-	            board = board + ds + ds + ds;
-	            break;
-	        case "1C":
-	            board = board + ds + ds;
-	            break;
-	        case "1D":
-	            board = board + ds;
-	            break;
-	        case "2F":
-	            board = board + ds;
-	            break;
-	        case "3G":
-	            board = board + ds + ds;
-	            break;
-	        case "4H":
-	            board = board + ds + ds + ds;
-	            break;
-	        case "5I":
-	            board = board + ds + ds + ds + ds;
-	            break;
-	            }
-	        board = board + k + ds;
-	        if (k.equals("9I") || k.equals("9H") || k.equals("9G") || k.equals("9F") || k.equals("9E") || 
-	                k.equals("8D") || k.equals("7C") || k.equals("6B") || k.equals("5A")) {
-	                board = board + "\n";
-	            }
-	        }
-	        return board;
-	    }
-	 
-	 public String printBoardValues() {
-	        String board = "";
-	        String ds = " ";
-	        for (String k : Board.map.keySet()) {
-	        switch (k) {
-	        case "1A":
-	            board = board + ds + ds + ds + ds;
-	            break;
-	        case "1B":
-	            board = board + ds + ds + ds;
-	            break;
-	        case "1C":
-	            board = board + ds + ds;
-	            break;
-	        case "1D":
-	            board = board + ds;
-	            break;
-	        case "2F":
-	            board = board + ds;
-	            break;
-	        case "3G":
-	            board = board + ds + ds;
-	            break;
-	        case "4H":
-	            board = board + ds + ds + ds;
-	            break;
-	        case "5I":
-	            board = board + ds + ds + ds + ds;
-	            break;
-	            }
-	        board = board + map.get(k) + ds;
-	        if (k.equals("9I") || k.equals("9H") || k.equals("9G") || k.equals("9F") || k.equals("9E") || 
-	                k.equals("8D") || k.equals("7C") || k.equals("6B") || k.equals("5A")) {
-	                board = board + "\n";
-	            }
-	        }
-	        return board;
-	    }
+	public String printBoardCoords() {
+		String board = "";
+		String ds = "  ";
+		for (String k : Board.map.keySet()) {
+			switch (k) {
+			case "1A":
+				board = board + ds + ds + ds + ds;
+				break;
+			case "1B":
+				board = board + ds + ds + ds;
+				break;
+			case "1C":
+				board = board + ds + ds;
+				break;
+			case "1D":
+				board = board + ds;
+				break;
+			case "2F":
+				board = board + ds;
+				break;
+			case "3G":
+				board = board + ds + ds;
+				break;
+			case "4H":
+				board = board + ds + ds + ds;
+				break;
+			case "5I":
+				board = board + ds + ds + ds + ds;
+				break;
+			}
+			board = board + k + ds;
+			if (k.equals("9I") || k.equals("9H") || k.equals("9G") || k.equals("9F") || k.equals("9E") || k.equals("8D")
+					|| k.equals("7C") || k.equals("6B") || k.equals("5A")) {
+				board = board + "\n";
+			}
+		}
+		return board;
+	}
+
+	public String printBoardValues() {
+		String board = "";
+		String ds = "  ";
+		for (String k : Board.map.keySet()) {
+			switch (k) {
+			case "1A":
+				board = board + ds + ds + ds + ds;
+				break;
+			case "1B":
+				board = board + ds + ds + ds;
+				break;
+			case "1C":
+				board = board + ds + ds;
+				break;
+			case "1D":
+				board = board + ds;
+				break;
+			case "2F":
+				board = board + ds;
+				break;
+			case "3G":
+				board = board + ds + ds;
+				break;
+			case "4H":
+				board = board + ds + ds + ds;
+				break;
+			case "5I":
+				board = board + ds + ds + ds + ds;
+				break;
+			}
+			board = board + map.get(k) + ds;
+			if (k.equals("9I") || k.equals("9H") || k.equals("9G") || k.equals("9F") || k.equals("9E") || k.equals("8D")
+					|| k.equals("7C") || k.equals("6B") || k.equals("5A")) {
+				board = board + "\n";
+			}
+		}
+		return board;
+	}
 
 	public boolean gameOver() {
-		if (hasWinner()==true) {
+		if (hasWinner() == true || turns == 96) {
 			return true;
 		}
 		return false;

@@ -128,13 +128,13 @@ public class Layout {
 
 			for (String k : LayoutMap.keySet()) {
 				if (k.charAt(1) == 'A' || k.charAt(1) == 'B') {
-					LayoutMap.replace(k, Marble.EE, Marble.BB);
+					LayoutMap.replace(k, Marble.EE, Marble.YY);
 				} else if (k.charAt(0) == '8' || k.charAt(0) == '9') {
-					LayoutMap.replace(k, Marble.EE, Marble.WW);
+					LayoutMap.replace(k, Marble.EE, Marble.BB);
 				} else if (k.equals("1D") || k.equals("1E") || k.equals("2E") || k.equals("2F") || k.equals("3F")
 						|| k.equals("3G") || k.equals("4G") || k.equals("4H") || k.equals("5H") || k.equals("5I")
 						|| k.equals("6I")) {
-					LayoutMap.replace(k, Marble.EE, Marble.YY);
+					LayoutMap.replace(k, Marble.EE, Marble.WW);
 				}
 			}
 			players = "three";
@@ -146,13 +146,13 @@ public class Layout {
 					LayoutMap.replace(k, Marble.EE, Marble.BB);
 				} else if (k.charAt(0) == '1' && k.charAt(1) != 'A' || k.equals("2C") || k.equals("2D")
 						|| k.equals("2E") || k.equals("3E") || k.equals("3D")) {
-					LayoutMap.replace(k, Marble.EE, Marble.WW);
+					LayoutMap.replace(k, Marble.EE, Marble.RR);
 				} else if (k.charAt(0) == '9' && k.charAt(1) != 'I' || k.equals("8E") || k.equals("8F")
 						|| k.equals("8G") || k.equals("7E") || k.equals("7F")) {
-					LayoutMap.replace(k, Marble.EE, Marble.RR);
+					LayoutMap.replace(k, Marble.EE, Marble.YY);
 				} else if (k.charAt(1) == 'I' && k.charAt(0) != '9' || k.equals("5H") || k.equals("6H")
 						|| k.equals("7H") || k.equals("5G") || k.equals("6G")) {
-					LayoutMap.replace(k, Marble.EE, Marble.YY);
+					LayoutMap.replace(k, Marble.EE, Marble.WW);
 				}
 			}
 			players = "four";

@@ -14,7 +14,7 @@ public class HumanPlayer extends Player {
 	 * Creates a new human player object.
 	 * 
 	 * @requires name is not null
-	 * @requires Marble is either BB, WW, RR or YY.
+	 * @requires Marble is either BB, WW, YY or RR.
 	 * @ensures the Name of this player will be name
 	 * @ensures the Marble of this player will be Marble
 	 */
@@ -31,7 +31,6 @@ public class HumanPlayer extends Player {
 	 * @requires board is not null
 	 * @ensures the returned in is a valid move
 	 * @param board the game board
-	 * @return the player's chosen field
 	 */
 	public void determineMove(Board board) {
 		String prompt = "> " + getName() + " (" + getMarble().toString() + ")" + ", what is your choice? ";
@@ -81,6 +80,7 @@ public class HumanPlayer extends Player {
     			valid = board.isValidMove(pos1, direction, marble);
     		}
         }
+		++Board.turns;
 	}
 
 }

@@ -9,7 +9,7 @@ public class Game {
 
 	/*
 	 * Constructor for Game. Creates a Board with the number of players as
-	 * parameters (MIGHT ADD game sizee too but thats for later)
+	 * parameters.
 	 */
 	public Game(Player... p) {
 		int NUMBER_PLAYERS = p.length;
@@ -32,6 +32,9 @@ public class Game {
 		}
 	}
 
+	/**
+	 * Method used to start the game.
+	 */
 	public void start() {
 		boolean continueGame = true;
 		while (continueGame) {
@@ -124,7 +127,7 @@ public class Game {
 
 	}
 
-	private void printResult() {
+	public void printResult() {
 		if (board.hasWinner()) {
 
 			Player winner = null;
@@ -137,14 +140,17 @@ public class Game {
 			} else if (board.isWinner(players[3].getMarble())) {
 				winner = players[3];
 			}
-			System.out.println("Speler " + winner.getName() + " (" + winner.getMarble().toString() + ") has won!");
+			System.out.println("Player " + winner.getName() + " (" + winner.getMarble().toString() + ") has won!");
 		} else {
 			System.out.println("Draw. There is no winner!");
 		}
 	}
+	
+	public Board getBoard() {
+		return board;
+	}
 
-	// needs to be changed
-	private void update() {
+	public void update() {
 		System.out.println(
 				"\ncurrent game situation: \n\n" + board.printBoardCoords() + "\n" + "\n" + board.printBoardValues());
 	}
