@@ -74,7 +74,8 @@ public class ClientHandler implements Runnable {
 	}
 
 	public void sendMessage(String msg) throws IOException {
-		out.write(msg + System.lineSeparator() + ProtocolMessages.EOT);
+		out.write(msg);
+		out.newLine();
 		out.flush();
 	}
 

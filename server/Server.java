@@ -196,11 +196,15 @@ public class Server implements Runnable {
 			return "The room does not exist";
 		}
 		for (Room r : rooms) {
-			if (r.getRoomNum().equals(roomnum)&& !r.getPlayerList().contains(client)) {
+			if(r.getPlayerList().contains(client)) {
+				return "the player already exists in the room";
+			}
+			if (r.getRoomNum().equals(roomnum)) {
 				r.addtoRoom(client);
 				return (String.valueOf(ProtocolMessages.JOIN) + ProtocolMessages.DELIMITER + roomnum
 						+ ProtocolMessages.DELIMITER + client.getClientHandlerName());
 			}
+			
 		}
 		return "The room does not exist or the player already exists in the room";
 	}

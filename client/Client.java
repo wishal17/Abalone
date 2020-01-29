@@ -164,9 +164,9 @@ public class Client{
 			try {
 				// Read and return answer from Server
 				StringBuilder sb = new StringBuilder();
-				for (String line = in.readLine(); line != null
-						&& !line.equals(ProtocolMessages.EOT); 
-						line = in.readLine()) {
+				String line;
+				while ((line = in.readLine()) != null); 
+				 {
 					sb.append(line + System.lineSeparator());
 				}
 				return sb.toString();
