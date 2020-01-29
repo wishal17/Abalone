@@ -64,8 +64,8 @@ public class Server implements Runnable {
 
 				while (true) {
 					Socket sock = ssock.accept();
-					String name = "Client " + String.format("%02d", next_client_no++);
-					view.showMessage("New client [" + name + "] connected!");
+					String name = sock.getInetAddress().getHostName();
+					view.showMessage("New client connected!"+"\n");
 					ClientHandler handler = new ClientHandler(sock, this, name);
 					new Thread(handler).start();
 					clients.add(handler);
@@ -109,12 +109,12 @@ public class Server implements Runnable {
 			// try to open a new ServerSocket
 			try {
 				view.showMessage("Attempting to open a socket at localhost " + "on port number: " + port + "...");
-				ssock = new ServerSocket(port, 0, InetAddress.getByName("localhost"));
+				ssock = new ServerSocket(port, 0, InetAddress.getByName("130.89.138.3"));
 
 				view.showMessage("Server started at port " + port);
 			} catch (IOException e) {
 				view.showMessage(
-						"ERROR: could not create a socket on " + "130.89.173.62" + " and port number: " + port + ".");
+						"ERROR: could not create a socket on " + "130.89.138.3" + " and port number: " + port + ".");
 
 				if (!view.getBoolean("Do you want to enter a different port number??(y/n)")) {
 					throw new ExitProgram("User indicated to exit program.");

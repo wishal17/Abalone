@@ -215,7 +215,6 @@ public class Client{
 	public void joinRoom(String roomnum) throws ServerUnavailableException {
 		if (!roomnum.equals(null)) {
 			sendMessage(String.valueOf(ProtocolMessages.JOIN)+ String.valueOf(ProtocolMessages.DELIMITER) + roomnum);
-			//System.out.println("join bruda");
 			showMessage(">"+readLineFromServer());
 		} else {
 			showMessage("The room does not exist");
@@ -229,7 +228,6 @@ public class Client{
 	
 	public void displayRooms() throws ServerUnavailableException {
 		sendMessage(String.valueOf(ProtocolMessages.ROOM)+ String.valueOf(ProtocolMessages.DELIMITER));
-		System.out.println("display bruda");
 		showMessage(">"+readMultipleLinesFromServer());
 	}
 	
