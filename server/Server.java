@@ -28,9 +28,6 @@ public class Server implements Runnable {
 	/** List of ClientHandlers, one for each connected client */
 	private List<Room> rooms = new ArrayList<Room>(10);
 
-	/** Next client number, increasing for every new connection */
-	private int next_client_no;
-
 	/** Incrementer for turns **/
 	public static int turns = 0;
 
@@ -44,7 +41,6 @@ public class Server implements Runnable {
 	public Server() {
 		clients = new ArrayList<>();
 		view = new ServerTUI();
-		next_client_no = 1;
 	}
 
 	/**
