@@ -14,7 +14,9 @@ import protocol.ProtocolMessages;
  * communication with one client.
  */
 public class ClientHandler implements Runnable {
-
+	//Delete this pussy
+	private int r = 0;
+	
 	/** The socket and In- and OutputStreams */
 	private BufferedReader in;
 	private BufferedWriter out;
@@ -97,6 +99,8 @@ public class ClientHandler implements Runnable {
 			s1 = msgs[0];
 			switch (s1) {
 			case "R":
+				++r;
+				sendMessage(""+r);
 				sendMessage(server.displayRooms());
 				break;
 			case "L":
