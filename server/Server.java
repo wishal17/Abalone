@@ -25,7 +25,7 @@ public class Server implements Runnable {
 	/** List of ClientHandlers, one for each connected client */
 	private List<ClientHandler> clients;
 
-	/** List of ClientHandlers, one for each connected client */
+	/** List of rooms, one for each connected client */
 	private List<Room> rooms = new ArrayList<Room>(10);
 
 	/** Incrementer for turns **/
@@ -61,7 +61,7 @@ public class Server implements Runnable {
 				while (true) {
 					Socket sock = ssock.accept();
 					String name = sock.getInetAddress().getHostName();
-					view.showMessage("New client connected!"+"\n");
+					view.showMessage("New client connected!" + "\n");
 					ClientHandler handler = new ClientHandler(sock, this, name);
 					new Thread(handler).start();
 					clients.add(handler);
@@ -83,8 +83,8 @@ public class Server implements Runnable {
 	}
 
 	/**
-	 * Sets up 10 rooms using {@link #setupGame()} and opens a new ServerSocket
-	 * at localhost on a user-defined port.
+	 * Sets up 10 rooms using {@link #setupGame()} and opens a new ServerSocket at
+	 * localhost on a user-defined port.
 	 * 
 	 * The user is asked to input a port, after which a socket is attempted to be
 	 * opened. If the attempt succeeds, the method ends, If the attempt fails, the
@@ -105,7 +105,7 @@ public class Server implements Runnable {
 			// try to open a new ServerSocket
 			try {
 				view.showMessage("Attempting to open a socket at localhost " + "on port number: " + port + "...");
-				ssock = new ServerSocket(port, 0, InetAddress.getByName("130.89.138.3"));
+				ssock = new ServerSocket(port, 0, InetAddress.getByName("localhost"));
 
 				view.showMessage("Server started at port " + port);
 			} catch (IOException e) {
@@ -130,16 +130,22 @@ public class Server implements Runnable {
 
 	/**
 	 * Used to send a message to all the clients connected to a server
+	 * 
 	 * @param msg
 	 * @throws IOException
 	 */
 	public void sendMessagetoAll(String msg) throws IOException {
 		for (ClientHandler ch : clients) {
-			ch.sendMessage(msg);
+			ch.getOut().write(msg);
+			ch.getOut().newLine();
+			ch.getOut().flush();
 		}
 	}
+
 	/**
-	 * Used to send a message to all the clients in a room about the start of a game or the party leader's teammate
+	 * Used to send a message to all the clients in a room about the start of a game
+	 * or the party leader's teammate
+	 * 
 	 * @param msg
 	 * @param cl
 	 * @throws IOException
@@ -163,9 +169,14 @@ public class Server implements Runnable {
 	 * @return String to be sent to client as a handshake response.
 	 */
 	public String getConnection(String name) {
+		for(ClientHandler c : clients) {
+			if(c.getClientHandlerName().equals(name)) {
+				return String.valueOf(ProtocolMessages.ERROR)+ ProtocolMessages.DELIMITER + "Name taken";
+			}
+		}
 		return (String.valueOf(ProtocolMessages.CONNECT) + ProtocolMessages.DELIMITER + name);
 	}
-	
+
 	/**
 	 * Removes a clientHandler from the client list if the client chooses to
 	 * disconnect.
@@ -173,8 +184,11 @@ public class Server implements Runnable {
 	 * @requires client != null
 	 */
 	public String removeClient(ClientHandler client) {
+		if (client.isinRoom() == true) {
+			removePlayerfromRoom(client);
+		}
 		this.clients.remove(client);
-		return ProtocolMessages.DISCONNECT + ProtocolMessages.DELIMITER + client.getClientHandlerName();
+		return String.valueOf(ProtocolMessages.DISCONNECT) + ProtocolMessages.DELIMITER + client.getClientHandlerName();
 	}
 
 	/**
@@ -188,21 +202,22 @@ public class Server implements Runnable {
 	 * @return textual result, to be shown to the user
 	 */
 	public synchronized String addPlayertoRoom(String roomnum, ClientHandler client) {
-		if (roomnum.equals(null)) {
-			return "The room does not exist";
-		}
-		for (Room r : rooms) {
-			if(r.getPlayerList().contains(client)) {
-				return "the player already exists in the room";
+		int roomno;
+		try {
+			roomno = Integer.parseInt(roomnum);
+			if(roomno < 1 || roomno > 10) {
+				return String.valueOf(ProtocolMessages.ERROR)+ ProtocolMessages.DELIMITER + "Not a valid number";
 			}
-			if (r.getRoomNum().equals(roomnum)) {
-				r.addtoRoom(client);
-				return (String.valueOf(ProtocolMessages.JOIN) + ProtocolMessages.DELIMITER + roomnum
-						+ ProtocolMessages.DELIMITER + client.getClientHandlerName());
+			if (rooms.get(roomno-1).getPlayerList().contains(client)) {
+				rooms.get(roomno-1).removePlayer(client);
 			}
-			
+			rooms.get(roomno-1).addtoRoom(client);
+			client.addedtoRoom();
+			return (String.valueOf(ProtocolMessages.JOIN) + ProtocolMessages.DELIMITER + roomnum
+					+ ProtocolMessages.DELIMITER + client.getClientHandlerName() + "\n");
+		}catch (NumberFormatException e){
+			return "Not a valid number";
 		}
-		return "The room does not exist or the player already exists in the room";
 	}
 
 	/**
@@ -216,16 +231,13 @@ public class Server implements Runnable {
 	 */
 	public synchronized String removePlayerfromRoom(ClientHandler client) {
 		for (Room r : rooms) {
-			for (ClientHandler cl : r.getPlayerList()) {
-				if (cl.equals(client)) {
-					r.getPlayerList().remove(client);
-					this.clients.remove(client);
-					return (String.valueOf(ProtocolMessages.LEAVE) + ProtocolMessages.DELIMITER
-							+ client.getClientHandlerName());
-				}
+			if (r.getPlayerList().contains(client)) {
+				r.removePlayer(client);
+				client.removedfromRoom();
+				return ProtocolMessages.LEAVE + ProtocolMessages.DELIMITER + client.toString() + "\n";
 			}
 		}
-		return "The player was not found";
+		return "Player is not in the room\n";
 
 	}
 
@@ -245,10 +257,9 @@ public class Server implements Runnable {
 				display = display + cl.getClientHandlerName() + ProtocolMessages.DELIMITER;
 			}
 			display = display + String.valueOf(ProtocolMessages.DELIMITER);
-			
 		}
-		display = display + "lmao dab";
-		return display;
+		display = display.substring(0, display.length() - 2);
+		return display + "\n";
 	}
 
 	/**

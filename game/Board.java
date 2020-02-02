@@ -42,7 +42,7 @@ public class Board {
 	 * 
 	 * @param l
 	 */
-	public static int gamemode(Layout l) {
+	public int gamemode(Layout l) {
 		if (l.returnPlayers().equals("two")) {
 			return 2;
 		} else if (l.returnPlayers().equals("three")) {

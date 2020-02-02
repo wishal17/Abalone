@@ -7,14 +7,16 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import exceptions.ServerUnavailableException;
 import protocol.ProtocolMessages;
+import exceptions.ServerUnavailableException;
 
 /**
  * ClientHandler for the server application. This class can handle the
  * communication with one client.
  */
 public class ClientHandler implements Runnable {
-	
+
 	/** The socket and In- and OutputStreams */
 	private BufferedReader in;
 	private BufferedWriter out;
@@ -25,8 +27,12 @@ public class ClientHandler implements Runnable {
 
 	/** Name of this ClientHandler */
 	private String name;
+
 	boolean hasNotShutDown = true;
 
+	//Ensures that when a client joins a server he is not in a room. This can be changed later.
+	public boolean inroom = false;
+	
 	// Used to determine whether the handshake has been performed
 	private boolean getConnection = false;
 
@@ -63,8 +69,6 @@ public class ClientHandler implements Runnable {
 						System.out.println("> [" + name + "] sends... " + msg);
 					}
 					handleCommand(msg);
-					out.newLine();
-					out.flush();
 				}
 			}
 			shutdown();
@@ -74,7 +78,7 @@ public class ClientHandler implements Runnable {
 	}
 
 	public void sendMessage(String msg) throws IOException {
-		out.write(msg + System.lineSeparator() + ProtocolMessages.EOT);
+		out.write(msg);
 		out.newLine();
 		out.flush();
 	}
@@ -111,7 +115,8 @@ public class ClientHandler implements Runnable {
 				hasNotShutDown = false;
 				break;
 			default:
-				out.write("Unknown command: " + s1 + System.lineSeparator() + ProtocolMessages.EOT);
+				out.write("Unknown command: " + s1);
+				out.newLine();
 				out.flush();
 				break;
 			}
@@ -131,7 +136,8 @@ public class ClientHandler implements Runnable {
 				server.sendMessagetoRoom(server.leaderTeammate(s2), this);
 				break;
 			default:
-				out.write("Unknown command: " + s1 + System.lineSeparator() + ProtocolMessages.EOT);
+				out.write("Unknown command: " + s1);
+				out.newLine();
 				out.flush();
 				break;
 			}
@@ -146,7 +152,8 @@ public class ClientHandler implements Runnable {
 				// this);
 				break;
 			default:
-				out.write("Unknown command: " + s1 + System.lineSeparator() + ProtocolMessages.EOT);
+				out.write("Unknown command: " + s1);
+				out.newLine();
 				out.flush();
 				break;
 			}
@@ -158,7 +165,7 @@ public class ClientHandler implements Runnable {
 	 * OutputStreams.
 	 */
 	private void shutdown() {
-		System.out.println("> [" + name + "] Shutting down.");
+		System.out.println("> [" + name + "] has disconnected from the server.");
 		try {
 			in.close();
 			out.close();
@@ -169,7 +176,36 @@ public class ClientHandler implements Runnable {
 		server.removeClient(this);
 	}
 
+	public String toString() {
+		return name;
+	}
+
+	public boolean equals(ClientHandler ch) {
+		if (ch instanceof ClientHandler) {
+			return this.toString().equals(ch.toString());
+		}
+		return false;
+	}
+	
+	public void addedtoRoom() {
+		inroom = true;
+	}
+	
+	public void removedfromRoom() {
+		inroom = false;
+	}
+	
+	public boolean isinRoom() {
+		return inroom;
+	}
+	
 	public String getClientHandlerName() {
 		return name;
 	}
+	
+	public BufferedWriter getOut() {
+		return out;
+	}
+	
+	
 }

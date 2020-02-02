@@ -12,11 +12,6 @@ public class ProtocolMessages {
 	public static final String DELIMITER = ";";
 
 	/**
-	 * Sent as last line in a multi-line response to indicate the end of the text.
-	 */
-	public static final String EOT = "--EOT--";
-
-	/**
 	 * The following chars are both used by the TUI to receive user input, and the
 	 * server and client to distinguish messages.
 	 */
@@ -32,6 +27,8 @@ public class ProtocolMessages {
 	public static final char START = 'S';
 	//Used to make a move
 	public static final char MOVE = 'M';
+	//Used to send errors
+	public static final char ERROR = 'E';
 	public static final char TURN = 'T';
 	public static final char DISCONNECT = 'D';
 	public static final char FINISH = 'F';

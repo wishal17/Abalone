@@ -8,18 +8,23 @@ import java.util.Scanner;
 import exceptions.ExitProgram;
 import exceptions.ProtocolException;
 import exceptions.ServerUnavailableException;
+import game.Board;
+import game.Layout;
 import protocol.ProtocolMessages;
 
-public class ClientTUI implements ClientView {
+public class ClientTUI implements ClientView, Runnable {
 
 	private Client client;
+	private boolean connected = false;
 	Scanner read;
+	Board localboard;
 
 	public ClientTUI() {
 		client = new Client();
 		read = new Scanner(System.in);
 	}
 
+	
 	@Override
 	public void start() throws ServerUnavailableException, ProtocolException {
 		try {
@@ -27,35 +32,78 @@ public class ClientTUI implements ClientView {
 			int port = getInt("Port: ");
 			showMessage("Attempting to connect to " + ip + ":" + port + "...");
 			client.createConnection(ip, port);
-		} catch (ExitProgram e1) {
-			e1.printStackTrace();
-		}
+			connected = true;
 		String name = "";
-		while(name.equals("")||name == null) {
-			name = getString("E;NotConnected"+"Please enter C;<name> to connect to the server:");
+		while (name.equals("") || name == null) {
+			name = getString("E;NotConnected" + "Please enter C;<name> to connect to the server:");
 		}
 		client.start(name);
-
-		//printHelpMenu();
-
+		// printHelpMenu();
+		(new Thread (this)).start();
 		while (true) {
 			try {
-				handleUserInput(getString("> Enter command here: "));
+				handleUserInput(read.nextLine());
 			} catch (ExitProgram e) {
-				// TODO Auto-generated catch block
 				break;
 			}
 		}
 
+		connected = false;
 		client.sendDisconnect();
 		client.closeConnection();
-
-		boolean a = getBoolean("Do you want to reestablish the connection? 'Y' or 'N");
-		if (a) {
-			start();
+		}catch (ServerUnavailableException | ExitProgram  e) {
+			System.out.println("You have disconnected");
 		}
+			
+
 	}
 
+
+	@Override
+	public void run() {
+		while(connected) {
+			String incoming;
+			try {
+				incoming = client.readLineFromServer();
+				if(incoming != null && !incoming.equals("")) {
+					handleIncoming(incoming);
+				}
+			} catch (ServerUnavailableException e) {
+				System.out.println("No connection to the server");
+				break;
+			}
+		}
+		
+	}
+	
+	public void handleIncoming(String input) {
+		String messages[] = input.split(ProtocolMessages.DELIMITER);
+		switch(messages[0]) {
+		case "R":
+			System.out.println(input.replace(";;", ";\n;"));
+			break;
+		case "C":
+			System.out.println(messages[1]+" is connected");
+			break;
+		case "J":
+			System.out.println(messages[2]+" has joined room "+messages[1]);
+			break;
+		case "L":
+			System.out.println(messages[1]+ " has left the room");
+		case "S":
+			/*
+			 * localboard = new Board(new Layout((Integer.parseInt(messages[1])))); for(int
+			 * i=0; i<Integer.parseInt(messages[1]); i++){
+			 * 
+			 * }
+			 */
+		case "E":
+			System.out.println(messages[1]);
+		}
+		System.out.print("\nEnter command here: ");
+
+	}
+	
 	@Override
 	public void handleUserInput(String input) throws ExitProgram, ServerUnavailableException, ProtocolException {
 		String[] msgs = input.split(ProtocolMessages.DELIMITER);
@@ -76,41 +124,40 @@ public class ClientTUI implements ClientView {
 			case "D":
 				client.sendDisconnect();
 				throw new ExitProgram("Program Exited");
-				//break;
+			// break;
 			default:
 				System.out.println("Unknown command: " + s1);
 				printHelpMenu();
-				break;
+				System.out.print("\nEnter command here: ");
 			}
 		} else if (msgs.length == 2) {
 			s1 = msgs[0];
 			s2 = msgs[1];
 			switch (s1) {
 			case "J":
-				client.joinRoom(s2);;
+				client.joinRoom(s2);
 				break;
 			case "A":
-				client.leaderTeammate(s2);;
+				client.leaderTeammate(s2);
 				break;
 			default:
 				System.out.println("Unknown command: " + s1);
 				printHelpMenu();
-				break;
+				System.out.print("\nEnter command here: ");
 			}
 		} else if (msgs.length == 3) {
 			s1 = msgs[0];
 			switch (s1) {
-
-			case "x":
-				throw new ExitProgram("Program Exited");
-			default:
-				showMessage("Unknown command: " + s1 + "\n");
-				printHelpMenu();
+			case "M":
 				break;
+			default:
+				System.out.println("Unknown command: " + s1);
+				printHelpMenu();
+				System.out.print("\nEnter command here: ");
 			}
 		}
-
-	}
+		
+	} 
 
 	@Override
 	public void showMessage(String message) {
@@ -171,9 +218,9 @@ public class ClientTUI implements ClientView {
 		try {
 			(new ClientTUI()).start();
 		} catch (ServerUnavailableException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+
 
 }

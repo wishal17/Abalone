@@ -82,6 +82,12 @@ public class Room {
 		}
 	}
 	
+	public void removePlayer(ClientHandler cl) {
+		if(chl.contains(cl)) {
+			chl.remove(cl);
+		}
+	}
+	
 	public boolean isLeader(ClientHandler cl) {
 		if(cl == partyleader) {
 			return true;
