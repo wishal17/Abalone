@@ -36,8 +36,11 @@ public class ServerTUI implements ServerView {
 
 	@Override
 	public int getInt(String question) {
-		showMessage(question);
-		return read.nextInt();
+		String result = getString(question);
+		while(!numerical(result)) {
+			result = getString(question);
+		}
+		return Integer.parseInt(result);
 	}
 
 	@Override
@@ -49,6 +52,16 @@ public class ServerTUI implements ServerView {
 			return false;
 		} else {
 			return getBoolean(question);
+		}
+	}
+	
+	public boolean numerical(String s) {
+		try {
+			Integer.parseInt(s);
+			return true;
+		}catch(NumberFormatException e){
+			System.out.println("Error enter a valid port number");
+			return false;
 		}
 	}
 

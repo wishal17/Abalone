@@ -33,6 +33,9 @@ public class Board {
 		return copy;
 	}
 
+	/**
+	 * @return layout of the current board
+	 */
 	public static Layout getLayout() {
 		return layout;
 	}
@@ -42,7 +45,7 @@ public class Board {
 	 * 
 	 * @param l
 	 */
-	public int gamemode(Layout l) {
+	public static int gamemode(Layout l) {
 		if (l.returnPlayers().equals("two")) {
 			return 2;
 		} else if (l.returnPlayers().equals("three")) {
@@ -53,14 +56,28 @@ public class Board {
 		return -1;
 	}
 
+	/**
+	 * Returns the Linked hash map of the board
+	 * @return map
+	 */
 	public Map<String, Marble> returnBoardMap() {
 		return map;
 	}
 
+	/**
+	 * Returns a marble found at a specific coordinate
+	 * @param s (coordinate)
+	 * @return marble
+	 */
 	public static Marble getMarble(String s) {
 		return map.get(s);
 	}
 
+	/**
+	 * Used to determine if there is a marble at a specific coordinate.
+	 * @param s (coordinate)
+	 * @return true if marble is found else false.
+	 */
 	public static boolean hasMarble(String s) {
 		if (map.get(s) != Marble.EE) {
 			return true;
@@ -68,16 +85,21 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Used to determine whether a coordinate exists in the board.
+	 * @param s (coordinate)
+	 * @return true if the coordinate exists else returns false.
+	 */
 	public static boolean isValidCoordinate(String s) {
 		if (map.containsKey(s)) {
 			return true;
 		}
 		return false;
 	}
-
+	
 	/**
-	 * 
-	 * @return if the game has a winner
+	 * Used to check if a game has a winner
+	 * @return true if the game has a winner
 	 */
 	boolean hasWinner() {
 		int team1 = 0;
@@ -126,6 +148,11 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Used to determine if the current player is the winner.
+	 * @param m
+	 * @return
+	 */
 	public boolean isWinner(Marble m) {
 		int team1 = 0;
 		int team2 = 0;
@@ -176,24 +203,62 @@ public class Board {
 		return false;
 	}
 
+	/**
+	 * Used to validate a one marble move
+	 * @param pos1
+	 * @param direction
+	 * @param m
+	 * @return true if valid move else false
+	 */
 	public boolean isValidMove(String pos1, int direction, Marble m) {
 		return makeMove(pos1, direction, m);
 	}
 
+	/**
+	 * Used to validate a two marble move
+	 * @param pos1
+	 * @param pos2
+	 * @param direction
+	 * @param m
+	 * @return true if valid move else false
+	 */
 	public boolean isValidMove(String pos1, String pos2, int direction, Marble m) {
 		return makeMove(pos1, pos2, direction, m);
 	}
 
+	/**
+	 *  Used to validate a three marble move
+	 * @param pos1
+	 * @param pos2
+	 * @param pos3
+	 * @param direction
+	 * @param m
+	 * @return true if valid move else false
+	 */
 	public boolean isValidMove(String pos1, String pos2, String pos3, int direction, Marble m) {
 		return makeMove(pos1, pos2, pos3, direction, m);
 	}
 
+	/**
+	 * Used to make a one marble move
+	 * @param pos1
+	 * @param direction
+	 * @param m
+	 * @return true if move is made else false
+	 */
 	public boolean makeMove(String pos1, int direction, Marble m) {
 		Move move = new Move();
 		return move.moveWithoutPushing(pos1, direction, m);
 
 	}
 
+	/**
+	 * Used to make a two marble move
+	 * @param pos1, pos2
+	 * @param direction
+	 * @param m
+	 * @return true if move is made else false
+	 */
 	public boolean makeMove(String pos1, String pos2, int direction, Marble m) {
 		Move move = new Move();
 		String headcoord;
@@ -209,6 +274,13 @@ public class Board {
 		}
 	}
 
+	/**
+	 * Used to make a three marble move
+	 * @param pos1, pos2, pos3
+	 * @param direction
+	 * @param m
+	 * @return true if move is made else false
+	 */
 	public boolean makeMove(String pos1, String pos2, String pos3, int direction, Marble m) {
 		Move move = new Move();
 		List<String> list = new ArrayList<String>();
@@ -228,13 +300,28 @@ public class Board {
 			return move.moveWithPushing(pos1, pos2, pos3, direction, m);
 		}
 	}
+	
+	/**
+	 * Returns number of turns performed
+	 * @return an integer turns
+	 */
+	public int getTurns() {
+		return turns;
+	}
 
+	/*
+	 * Used to reset a board to its original state.
+	 */
 	public void reset() {
 		map = Board.layout.returnLayoutMap();
 		eliminated.removeAll(eliminated);
 		turns = 0;
 	}
 
+	/**
+	 * Used to print out the coordinates of the board in an arranged format.
+	 * @return the board in coordinates form
+	 */
 	public String printBoardCoords() {
 		String board = "";
 		String ds = "  ";
@@ -274,6 +361,10 @@ public class Board {
 		return board;
 	}
 
+	/**
+	 * Used to print out the marbles at each position in the board
+	 * @return the board in a marble form.
+	 */
 	public String printBoardValues() {
 		String board = "";
 		String ds = "  ";
@@ -313,6 +404,10 @@ public class Board {
 		return board;
 	}
 
+	/**
+	 * Determines if a game has ended or not
+	 * @return true if it has ended else false
+	 */
 	public boolean gameOver() {
 		if (hasWinner() == true || turns == 96) {
 			return true;

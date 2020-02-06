@@ -153,7 +153,7 @@ public class Client {
 	}
 
 	public void getConnection(String name) throws ServerUnavailableException, ProtocolException {
-		sendMessage(name);
+		sendMessage(ProtocolMessages.CONNECT+ProtocolMessages.DELIMITER+name);
 	}
 
 	public void sendDisconnect() throws ServerUnavailableException {
@@ -185,6 +185,10 @@ public class Client {
 		} else {
 			showMessage("Please enter a valid player name");
 		}
+	}
+	
+	public void makeMove(String move, int direction) throws ServerUnavailableException {
+		sendMessage(move);
 	}
 
 	public void startGame() throws ServerUnavailableException {

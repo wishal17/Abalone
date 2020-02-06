@@ -108,7 +108,12 @@ public class ClientHandler implements Runnable {
 				server.sendMessagetoAll(server.removePlayerfromRoom(this));
 				break;
 			case "S":
-				server.sendMessagetoRoom(server.startGame(this), this);
+				if(server.startGame(this).contains(ProtocolMessages.ERROR)) {
+					System.out.println("errorrr");
+					sendMessage(server.startGame(this));
+				} else {
+					server.sendMessagetoRoom(server.startGame(this), this);
+				}
 				break;
 			case "D":
 				server.sendMessagetoAll(server.removeClient(this));
@@ -130,7 +135,12 @@ public class ClientHandler implements Runnable {
 				this.name = s2;
 				break;
 			case "J":
-				server.sendMessagetoAll(server.addPlayertoRoom(s2, this));
+				if(this.inroom) {
+					sendMessage("You are already in a room!\n");
+				} else {
+					server.sendMessagetoAll(server.addPlayertoRoom(s2, this));
+				}
+				
 				break;
 			case "A":
 				server.sendMessagetoRoom(server.leaderTeammate(s2), this);
@@ -161,7 +171,7 @@ public class ClientHandler implements Runnable {
 	}
 
 	/**
-	 * Shut down the connection to this client by closing the socket and the In- and
+	 * Shuts down the connection to this client by closing the socket and the In- and
 	 * OutputStreams.
 	 */
 	private void shutdown() {

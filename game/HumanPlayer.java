@@ -22,8 +22,6 @@ public class HumanPlayer extends Player {
 		super(name, Marble);
 	}
 
-	// -- Commands ---------------------------------------------------
-
 	/**
 	 * Asks the user to input the field where to place the next Marble. This is done
 	 * using the standard input/output.

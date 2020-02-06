@@ -16,23 +16,22 @@ public class ProtocolMessages {
 	 * server and client to distinguish messages.
 	 */
 	/** Used for the server-client handshake */
-	public static final char CONNECT = 'C';
+	public static final String CONNECT = "C";
 	//Used to display all rooms and the people inside
-	public static final char ROOM = 'R';
+	public static final String ROOM = "R";
 	//Used to leave a room
-	public static final char LEAVE = 'L';
+	public static final String LEAVE = "L";
 	//Used to join a room
-	public static final char JOIN = 'J';
+	public static final String JOIN = "J";
 	//Used to start a game in a room
-	public static final char START = 'S';
+	public static final String START = "S";
 	//Used to make a move
-	public static final char MOVE = 'M';
+	public static final String MOVE = "M";
 	//Used to send errors
-	public static final char ERROR = 'E';
-	public static final char TURN = 'T';
-	public static final char DISCONNECT = 'D';
-	public static final char FINISH = 'F';
-	public static final char ALL = 'A';
-	public static final char HELP = 'H';
+	public static final String ERROR = "E";
+	public static final String TURN = "T";
+	public static final String DISCONNECT = "D";
+	public static final String FINISH = "F";
+	public static final String ALL = "A";
 
 }
