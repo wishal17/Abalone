@@ -5,9 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class Move extends Board {
-	public Move(Layout l) {
-		super(l);
+public class Move{
+	private Board b;
+	public Move(Board board) {
+		this.b = board;
 		// TODO Auto-generated constructor stub
 	}
 
@@ -39,7 +40,7 @@ public class Move extends Board {
 	 */
 	public String nextCoordinates(String pos, int direction) {
 		String newposition = "";
-		if (isValidCoordinate(pos)) {
+		if (b.isValidCoordinate(pos)) {
 			int num = Character.getNumericValue(pos.charAt(0));
 			char YAXIS = pos.charAt(1);
 
@@ -66,7 +67,7 @@ public class Move extends Board {
 				newposition = null;
 			}
 		}
-		if (isValidCoordinate(newposition)) {
+		if (b.isValidCoordinate(newposition)) {
 			return newposition;
 		}
 		return null;
@@ -84,17 +85,17 @@ public class Move extends Board {
 	public boolean pushtwovsEnemyMarbles(String pos, int direction, Marble m) {
 		String onenexttohead = nextCoordinates(pos, direction);
 		String twonexttohead = nextCoordinates(onenexttohead, direction);
-		if (getLayout().returnPlayers().equals("four")) {
-			if (!m.isTeammate(getMarble(onenexttohead))
-					&& (getMarble(twonexttohead) == null || getMarble(twonexttohead) == Marble.EE)) {
+		if (b.getLayout().returnPlayers().equals("four")) {
+			if (!m.isTeammate(b.getMarble(onenexttohead))
+					&& (b.getMarble(twonexttohead) == null || b.getMarble(twonexttohead) == Marble.EE)) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (getLayout().returnPlayers().equals("three")
-				|| getLayout().returnPlayers().equals("two")) {
-			if (getMarble(onenexttohead) != m
-					&& (getMarble(twonexttohead) == null || getMarble(twonexttohead) == Marble.EE)) {
+		} else if (b.getLayout().returnPlayers().equals("three")
+				|| b.getLayout().returnPlayers().equals("two")) {
+			if (b.getMarble(onenexttohead) != m
+					&& (b.getMarble(twonexttohead) == null || b.getMarble(twonexttohead) == Marble.EE)) {
 				return true;
 			} else {
 				return false;
@@ -116,17 +117,17 @@ public class Move extends Board {
 		String onenexttohead = nextCoordinates(pos, direction);
 		String twonexttohead = nextCoordinates(onenexttohead, direction);
 		String threenexttohead = nextCoordinates(twonexttohead, direction);
-		if (getLayout().returnPlayers().equals("four")) {
-			if (!m.isTeammate(getMarble(onenexttohead)) && !m.isTeammate(getMarble(twonexttohead))
-					&& (getMarble(threenexttohead) == null || getMarble(threenexttohead) == Marble.EE)) {
+		if (b.getLayout().returnPlayers().equals("four")) {
+			if (!m.isTeammate(b.getMarble(onenexttohead)) && !m.isTeammate(b.getMarble(twonexttohead))
+					&& (b.getMarble(threenexttohead) == null || b.getMarble(threenexttohead) == Marble.EE)) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (getLayout().returnPlayers().equals("three")
-				|| getLayout().returnPlayers().equals("two")) {
-			if (getMarble(onenexttohead) != m && getMarble(twonexttohead) != m
-					&& (getMarble(threenexttohead) == null || getMarble(threenexttohead) == Marble.EE)) {
+		} else if (b.getLayout().returnPlayers().equals("three")
+				|| b.getLayout().returnPlayers().equals("two")) {
+			if (b.getMarble(onenexttohead) != m && b.getMarble(twonexttohead) != m
+					&& (b.getMarble(threenexttohead) == null || b.getMarble(threenexttohead) == Marble.EE)) {
 				return true;
 			} else {
 				return false;
@@ -146,9 +147,9 @@ public class Move extends Board {
 	 */
 	public boolean moveWithoutPushing(String pos, int direction, Marble m) {
 		String nextcoordspos = nextCoordinates(pos, direction);
-		if (map.get(pos) == m && !hasMarble(nextcoordspos)) {
-			map.put(nextcoordspos, m);
-			map.put(pos, Marble.EE);
+		if (b.map.get(pos) == m && !b.hasMarble(nextcoordspos)) {
+			b.map.put(nextcoordspos, m);
+			b.map.put(pos, Marble.EE);
 			return true;
 		}
 		return false;
@@ -177,19 +178,19 @@ public class Move extends Board {
 		String nextheadcoord = nextCoordinates(headcoord, direction);
 		String nextendcoord = nextCoordinates(endcoord, direction);
 		if (nextCoordinates(endcoord, direction).equals(headcoord)) {
-			if (map.get(pos1) == m && map.get(pos2) == m && (!hasMarble(nextheadcoord))) {
-				map.put(nextheadcoord, m);
-				map.put(nextendcoord, m);
-				map.put(endcoord, Marble.EE);
+			if (b.map.get(pos1) == m && b.map.get(pos2) == m && (!b.hasMarble(nextheadcoord))) {
+				b.map.put(nextheadcoord, m);
+				b.map.put(nextendcoord, m);
+				b.map.put(endcoord, Marble.EE);
 				return true;
 			}
 			return false;
 		} else {
-			if (map.get(pos1) == m && map.get(pos2) == m && (!hasMarble(nextheadcoord))) {
-				map.put(nextCoordinates(pos1, direction), m);
-				map.put(nextCoordinates(pos2, direction), m);
-				map.put(pos1, Marble.EE);
-				map.put(pos2, Marble.EE);
+			if (b.map.get(pos1) == m && b.map.get(pos2) == m && (!b.hasMarble(nextheadcoord))) {
+				b.map.put(nextCoordinates(pos1, direction), m);
+				b.map.put(nextCoordinates(pos2, direction), m);
+				b.map.put(pos1, Marble.EE);
+				b.map.put(pos2, Marble.EE);
 				return true;
 			}
 			return false;
@@ -226,25 +227,25 @@ public class Move extends Board {
 		String nextendcoord = nextCoordinates(endcoord, direction);
 		if ((nextCoordinates(list.get(1), direction).equals(list.get(0)))
 				|| (nextCoordinates(list.get(0), direction).equals(list.get(1)))) {
-			if (map.get(pos1) == m && map.get(pos2) == m && map.get(pos3) == m
-					&& (!hasMarble(nextheadcoord))) {
-				map.put(nextheadcoord, m);
-				map.put(nextendcoord, m);
-				map.put(endcoord, Marble.EE);
+			if (b.map.get(pos1) == m && b.map.get(pos2) == m && b.map.get(pos3) == m
+					&& (!b.hasMarble(nextheadcoord))) {
+				b.map.put(nextheadcoord, m);
+				b.map.put(nextendcoord, m);
+				b.map.put(endcoord, Marble.EE);
 				return true;
 			}
 			return false;
 		} else {
-			if (map.get(pos1) == m && map.get(pos2) == m && map.get(pos3) == m
-					&& (!hasMarble(nextCoordinates(pos1, direction)))
-					&& (!hasMarble(nextCoordinates(pos1, direction)))
-					&& (!hasMarble(nextCoordinates(pos1, direction)))) {
-				map.put(nextCoordinates(pos1, direction), m);
-				map.put(nextCoordinates(pos2, direction), m);
-				map.put(nextCoordinates(pos3, direction), m);
-				map.put(pos1, Marble.EE);
-				map.put(pos2, Marble.EE);
-				map.put(pos3, Marble.EE);
+			if (b.map.get(pos1) == m && b.map.get(pos2) == m && b.map.get(pos3) == m
+					&& (!b.hasMarble(nextCoordinates(pos1, direction)))
+					&& (!b.hasMarble(nextCoordinates(pos1, direction)))
+					&& (!b.hasMarble(nextCoordinates(pos1, direction)))) {
+				b.map.put(nextCoordinates(pos1, direction), m);
+				b.map.put(nextCoordinates(pos2, direction), m);
+				b.map.put(nextCoordinates(pos3, direction), m);
+				b.map.put(pos1, Marble.EE);
+				b.map.put(pos2, Marble.EE);
+				b.map.put(pos3, Marble.EE);
 				return true;
 			}
 			return false;
@@ -272,21 +273,21 @@ public class Move extends Board {
 			endcoord = pos2;
 		}
 		String onenextheadcoord = nextCoordinates(headcoord, direction);
-		if (map.get(pos1) == m && map.get(pos2) == m && hasMarble(onenextheadcoord)) {
+		if (b.map.get(pos1) == m && b.map.get(pos2) == m && b.hasMarble(onenextheadcoord)) {
 			if (pushtwovsEnemyMarbles(headcoord, direction, m) == false) {
 				return false;
 			} else if (pushtwovsEnemyMarbles(headcoord, direction, m) == true) {
-				Marble onenexttoheadMarble = getMarble(onenextheadcoord);
+				Marble onenexttoheadMarble = b.getMarble(onenextheadcoord);
 				String twonextheadcoord = nextCoordinates(onenextheadcoord, direction);
-				if (getMarble(twonextheadcoord) == null) {
-					map.put(onenextheadcoord, m);
-					map.put(endcoord, Marble.EE);
-					eliminated.add(onenexttoheadMarble);
+				if (b.getMarble(twonextheadcoord) == null) {
+					b.map.put(onenextheadcoord, m);
+					b.map.put(endcoord, Marble.EE);
+					b.eliminated.add(onenexttoheadMarble);
 					return true;
-				} else if (getMarble(twonextheadcoord) == Marble.EE) {
-					map.put(twonextheadcoord, onenexttoheadMarble);
-					map.put(onenextheadcoord, m);
-					map.put(endcoord, Marble.EE);
+				} else if (b.getMarble(twonextheadcoord) == Marble.EE) {
+					b.map.put(twonextheadcoord, onenexttoheadMarble);
+					b.map.put(onenextheadcoord, m);
+					b.map.put(endcoord, Marble.EE);
 					return true;
 				}
 			}
@@ -326,30 +327,30 @@ public class Move extends Board {
 		String twonextheadcoord = nextCoordinates(onenextheadcoord, direction);
 		String threenextheadcoord = nextCoordinates(twonextheadcoord, direction);
 
-		if (map.get(pos1) == m && map.get(pos2) == m && map.get(pos3) == m
-				&& (hasMarble(onenextheadcoord) || hasMarble(twonextheadcoord))) {
+		if (b.map.get(pos1) == m && b.map.get(pos2) == m && b.map.get(pos3) == m
+				&& (b.hasMarble(onenextheadcoord) || b.hasMarble(twonextheadcoord))) {
 			if (pushthreevsEnemyMarbles(headcoord, direction, m) == false) {
 				return false;
 			} else if (pushthreevsEnemyMarbles(headcoord, direction, m) == true) {
-				Marble onenexttoheadMarble = getMarble(onenextheadcoord);
-				Marble twonexttoheadMarble = getMarble(twonextheadcoord);
+				Marble onenexttoheadMarble = b.getMarble(onenextheadcoord);
+				Marble twonexttoheadMarble = b.getMarble(twonextheadcoord);
 				if (twonexttoheadMarble == null) {
-					map.put(endcoord, Marble.EE);
+					b.map.put(endcoord, Marble.EE);
 					moveWithPushing(midcoord, headcoord, direction, m);
-					map.put(midcoord, m);
+					b.map.put(midcoord, m);
 					return true;
 				} else {
-					if (getMarble(threenextheadcoord) == null) {
-						map.put(onenextheadcoord, m);
-						map.put(twonextheadcoord, onenexttoheadMarble);
-						map.put(endcoord, Marble.EE);
-						eliminated.add(twonexttoheadMarble);
+					if (b.getMarble(threenextheadcoord) == null) {
+						b.map.put(onenextheadcoord, m);
+						b.map.put(twonextheadcoord, onenexttoheadMarble);
+						b.map.put(endcoord, Marble.EE);
+						b.eliminated.add(twonexttoheadMarble);
 						return true;
-					} else if (getMarble(threenextheadcoord) == Marble.EE) {
-						map.put(threenextheadcoord, twonexttoheadMarble);
-						map.put(twonextheadcoord, onenexttoheadMarble);
-						map.put(onenextheadcoord, m);
-						map.put(endcoord, Marble.EE);
+					} else if (b.getMarble(threenextheadcoord) == Marble.EE) {
+						b.map.put(threenextheadcoord, twonexttoheadMarble);
+						b.map.put(twonextheadcoord, onenexttoheadMarble);
+						b.map.put(onenextheadcoord, m);
+						b.map.put(endcoord, Marble.EE);
 						return true;
 					}
 				}

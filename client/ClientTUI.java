@@ -135,6 +135,16 @@ public class ClientTUI implements ClientView, Runnable {
 			System.out.println("It is " + messages[1] + "'s turn.("
 					+ localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])) + ")");
 			break;
+		case "F":
+			if(messages.length==3) {
+				System.out.println(messages[2]+" and "+messages[1]+" are the winners!");
+			} else if (messages.length==2) {
+				System.out.println(messages[1]+" is the winner!");
+			} else {
+				System.out.println("Draw there is no winner!");
+			}
+			
+			break;
 		case "M":
 			String pos1, pos2, pos3;
 			String move = messages[1];

@@ -257,7 +257,7 @@ public class Board {
 	 * @return true if move is made else false
 	 */
 	public boolean makeMove(String pos1, int direction, Marble m) {
-		Move move = new Move(getLayout());
+		Move move = new Move(this);
 		return move.moveWithoutPushing(pos1, direction, m);
 
 	}
@@ -271,7 +271,7 @@ public class Board {
 	 * @return true if move is made else false
 	 */
 	public boolean makeMove(String pos1, String pos2, int direction, Marble m) {
-		Move move = new Move(getLayout());
+		Move move = new Move(this);
 		String headcoord;
 		if (move.nextCoordinates(pos1, direction).equals(pos2)) {
 			headcoord = pos2;
@@ -294,7 +294,7 @@ public class Board {
 	 * @return true if move is made else false
 	 */
 	public boolean makeMove(String pos1, String pos2, String pos3, int direction, Marble m) {
-		Move move = new Move(getLayout());
+		Move move = new Move(this);
 		List<String> list = new ArrayList<String>();
 		String headcoord;
 		list.add(pos1);

@@ -212,7 +212,7 @@ public class Server implements Runnable {
 				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "RoomHasStarted\n";
 			}
 			if (roomno < 1 || roomno > 10) {
-				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Not a valid number\n";
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "NotValidNumber\n";
 			}
 			if (rooms.get(roomno - 1).getPlayerList().size() == 4) {
 				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Full\n";
@@ -226,7 +226,7 @@ public class Server implements Runnable {
 			return (String.valueOf(ProtocolMessages.JOIN) + ProtocolMessages.DELIMITER + roomnum
 					+ ProtocolMessages.DELIMITER + client.getClientHandlerName() + "\n");
 		} catch (NumberFormatException e) {
-			return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Not a valid number\n";
+			return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "NotValidNumber\n";
 		}
 	}
 
