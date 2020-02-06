@@ -3,6 +3,8 @@ package client;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import exceptions.ExitProgram;
@@ -20,7 +22,7 @@ public class ClientTUI implements ClientView, Runnable {
 	private boolean connected = false;
 	Scanner read;
 	Board localboard;
-	Player p;
+	private List<String> names = new ArrayList<String>();
 
 	public ClientTUI() {
 		client = new Client();
@@ -90,7 +92,6 @@ public class ClientTUI implements ClientView, Runnable {
 				incoming = client.readLineFromServer();
 				if (incoming != null && !incoming.equals("")) {
 					handleIncoming(incoming);
-					System.out.println(incoming);
 				}
 			} catch (ServerUnavailableException e) {
 				System.out.println("No connection to the server");
@@ -122,11 +123,42 @@ public class ClientTUI implements ClientView, Runnable {
 			System.out.println(messages[1] + " has left a room");
 			break;
 		case "S":
-			System.out.println("A new game with " + messages[1] + " players has started in this room.");
+			System.out.println("A new game with " + messages[1] + " players has started in this room.\n");
 			localboard = new Board(new Layout((Integer.parseInt(messages[1]))));
-			
+			for (int i = 2; i < messages.length; i++) {
+				names.add(messages[i]);
+			}
+			System.out.println(localboard.printBoardCoords());
+			System.out.println(localboard.printBoardValues());
 			break;
-
+		case "T":
+			System.out.println("It is " + messages[1] + "'s turn.("
+					+ localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])) + ")");
+			break;
+		case "M":
+			String pos1, pos2, pos3;
+			String move = messages[1];
+			if (move.length() == 6) {
+				pos1 = move.charAt(0) + "" + move.charAt(1);
+				pos2 = move.charAt(2) + "" + move.charAt(3);
+				pos3 = move.charAt(4) + "" + move.charAt(5);
+				localboard.isValidMove(pos1, pos2, pos3, Integer.parseInt(messages[2]),
+						localboard.orderofMarbles(names.size()).get(names.indexOf(messages[3])));
+			} else if (move.length() == 4) {
+				pos1 = move.charAt(0) + "" + move.charAt(1);
+				pos2 = move.charAt(2) + "" + move.charAt(3);
+				localboard.isValidMove(pos1, pos2, Integer.parseInt(messages[2]),
+						localboard.orderofMarbles(names.size()).get(names.indexOf(messages[3])));
+			} else if (move.length() == 2) {
+				pos1 = move.charAt(0) + "" + move.charAt(1);
+				localboard.isValidMove(pos1, Integer.parseInt(messages[2]),
+						localboard.orderofMarbles(names.size()).get(names.indexOf(messages[3])));
+			}
+			System.out.println(localboard.printBoardCoords());
+			System.out.println(localboard.printBoardValues());
+			System.out.println("eliminated marbles: " + localboard.eliminated.size());
+			System.out.println(messages[3] + " has moved " + messages[1] + " in the direction " + messages[2]);
+			break;
 		case "E":
 			System.out.println(messages[1]);
 		}
@@ -186,33 +218,10 @@ public class ClientTUI implements ClientView, Runnable {
 			s3 = msgs[2];
 			switch (s1) {
 			case "M":
-				String pos1, pos2, pos3;
-				String move = s2;
-				int direction = Integer.parseInt(s3);
-				Marble marble = p.getMarble();
-				boolean valid = true;
-				if (move.length() == 6) {
-					pos1 = move.charAt(0) + "" + move.charAt(1);
-					pos2 = move.charAt(2) + "" + move.charAt(3);
-					pos3 = move.charAt(4) + "" + move.charAt(5);
-					valid = localboard.isValidMove(pos1, pos2, pos3, direction, marble);
-				} else if (move.length() == 4) {
-					pos1 = move.charAt(0) + "" + move.charAt(1);
-					pos2 = move.charAt(2) + "" + move.charAt(3);
-					valid = localboard.isValidMove(pos1, pos2, direction, marble);
-				} else if (move.length() == 2) {
-					pos1 = move.charAt(0) + "" + move.charAt(1);
-					valid = localboard.isValidMove(pos1, direction, marble);
-				}
-				while (!valid) {
-					System.out
-							.println("ERROR: This move " + move + " is not a valid choice. Please enter another move");
-					handleUserInput(input);
-				}
-				client.makeMove(s2, Integer.parseInt(s3));
+				client.makeMove(s2, s3);
 				break;
 			default:
-				System.out.println("Unknown command: " + s1);
+				System.out.println("ERROR: CommandNotRecognized: " + s1);
 				printHelpMenu();
 				System.out.print("\n> ");
 			}
@@ -257,7 +266,7 @@ public class ClientTUI implements ClientView, Runnable {
 	@Override
 	public int getInt(String question) {
 		String result = getString(question);
-		while(!numerical(result)) {
+		while (!numerical(result)) {
 			result = getString(question);
 		}
 		return Integer.parseInt(result);
@@ -277,12 +286,12 @@ public class ClientTUI implements ClientView, Runnable {
 			return getBoolean(question);
 		}
 	}
-	
-	public boolean numerical(String s) {
+
+	public static boolean numerical(String s) {
 		try {
 			Integer.parseInt(s);
 			return true;
-		}catch(NumberFormatException e){
+		} catch (NumberFormatException e) {
 			System.out.println("Error enter a valid port number");
 			return false;
 		}

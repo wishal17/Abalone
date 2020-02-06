@@ -64,7 +64,7 @@ public class Game {
 	 */
 	private void play() {
 		update();
-		if (Board.gamemode(Board.getLayout()) == 2) {
+		if (board.gamemode(board.getLayout()) == 2) {
 			while (board.gameOver() != true) {
 				players[0].makeMove(board);
 				update();
@@ -79,7 +79,7 @@ public class Game {
 					return;
 				}
 			}
-		} else if (Board.gamemode(Board.getLayout()) == 3) {
+		} else if (board.gamemode(board.getLayout()) == 3) {
 			while (board.gameOver() != true) {
 				players[0].makeMove(board);
 				update();
@@ -100,7 +100,7 @@ public class Game {
 					return;
 				}
 			}
-		} else if (Board.gamemode(Board.getLayout()) == 4) {
+		} else if (board.gamemode(board.getLayout()) == 4) {
 			while (board.gameOver() != true) {
 				players[0].makeMove(board);
 				update();
@@ -191,6 +191,6 @@ public class Game {
 	 */
 	public void update() {
 		System.out.println(
-				"\ncurrent game situation: \n\n" + board.printBoardCoords() + "\n" + "\n" + board.printBoardValues());
+				"\ncurrent game situation: \n\n" + board.printBoardCoords() + "\n" + "\n" + board.printBoardValues()+ "\n"+board.geteliminated());
 	}
 }

@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.net.Socket;
 
 import exceptions.ServerUnavailableException;
+import game.Marble;
+import game.Room;
 import protocol.ProtocolMessages;
 import exceptions.ServerUnavailableException;
 
@@ -30,9 +32,16 @@ public class ClientHandler implements Runnable {
 
 	boolean hasNotShutDown = true;
 
-	//Ensures that when a client joins a server he is not in a room. This can be changed later.
+	// Ensures that when a client joins a server he is not in a room. This can be
+	// changed later.
 	public boolean inroom = false;
-	
+
+	// Player's marble
+	public Marble marble = null;
+
+	// Player's room
+	public Room room = null;
+
 	// Used to determine whether the handshake has been performed
 	private boolean getConnection = false;
 
@@ -86,8 +95,8 @@ public class ClientHandler implements Runnable {
 	/**
 	 * Handles commands received from the client by calling the according methods at
 	 * the server. For example, when the message "C;Name" is received, the method
-	 * getConnection(String name) of server should be called and the output must be
-	 * sent to the client.
+	 * server.getConnection(String name) of server should be called and the output
+	 * must be sent to the client.
 	 * 
 	 * If the received input is not valid, send an "Unknown Command" message to the
 	 * server.
@@ -108,15 +117,21 @@ public class ClientHandler implements Runnable {
 				server.sendMessagetoAll(server.removePlayerfromRoom(this));
 				break;
 			case "S":
-				if(server.startGame(this).contains(ProtocolMessages.ERROR)) {
-					System.out.println("errorrr");
+				if (server.startGame(this).contains(ProtocolMessages.ERROR)) {
 					sendMessage(server.startGame(this));
 				} else {
 					server.sendMessagetoRoom(server.startGame(this), this);
+					server.sendMessagetoRoom(turn(), this);
 				}
 				break;
 			case "D":
+				if (getRoom() != null) {
+					if (getRoom().getStatus().equals("Started")) {
+						server.sendMessagetoRoom(turn(), this);
+					}
+				}
 				server.sendMessagetoAll(server.removeClient(this));
+				
 				hasNotShutDown = false;
 				break;
 			default:
@@ -135,12 +150,11 @@ public class ClientHandler implements Runnable {
 				this.name = s2;
 				break;
 			case "J":
-				if(this.inroom) {
+				if (this.inroom) {
 					sendMessage("You are already in a room!\n");
 				} else {
 					server.sendMessagetoAll(server.addPlayertoRoom(s2, this));
 				}
-				
 				break;
 			case "A":
 				server.sendMessagetoRoom(server.leaderTeammate(s2), this);
@@ -157,9 +171,8 @@ public class ClientHandler implements Runnable {
 			s3 = msgs[2];
 			switch (s1) {
 			case "M":
-
-				// server.sendMessagetoRoom(server.makeMove(this, s2, Integer.parseInt(s3)),
-				// this);
+				server.sendMessagetoRoom(this.getRoom().makeMove(this, s2, s3), this);
+				server.sendMessagetoRoom(turn(), this);
 				break;
 			default:
 				out.write("Unknown command: " + s1);
@@ -171,8 +184,8 @@ public class ClientHandler implements Runnable {
 	}
 
 	/**
-	 * Shuts down the connection to this client by closing the socket and the In- and
-	 * OutputStreams.
+	 * Shuts down the connection to this client by closing the socket and the In-
+	 * and OutputStreams.
 	 */
 	private void shutdown() {
 		System.out.println("> [" + name + "] has disconnected from the server.");
@@ -196,26 +209,44 @@ public class ClientHandler implements Runnable {
 		}
 		return false;
 	}
-	
+
 	public void addedtoRoom() {
 		inroom = true;
 	}
-	
+
 	public void removedfromRoom() {
 		inroom = false;
 	}
-	
+
 	public boolean isinRoom() {
 		return inroom;
 	}
-	
+
+	public void assignRoom(Room r) {
+		this.room = r;
+	}
+
+	public Room getRoom() {
+		return room;
+	}
+
+	public String turn() {
+		return ProtocolMessages.TURN + ProtocolMessages.DELIMITER + room.playerturn() + "\n";
+	}
+
 	public String getClientHandlerName() {
 		return name;
 	}
-	
+
+	public void assignMarble(Marble m) {
+		this.marble = m;
+	}
+
+	public Marble getMarble() {
+		return marble;
+	}
+
 	public BufferedWriter getOut() {
 		return out;
 	}
-	
-	
 }

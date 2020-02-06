@@ -3,6 +3,8 @@ package game;
 import java.util.ArrayList;
 import java.util.List;
 
+import client.ClientTUI;
+import protocol.ProtocolMessages;
 import server.ClientHandler;
 
 /**
@@ -14,12 +16,13 @@ import server.ClientHandler;
  */
 public class Room {
 	private String roomnum;
-	private boolean gamestarted = false;
+	private Board serverboard;
 	private List<ClientHandler> chl = new ArrayList<ClientHandler>();
 	private ClientHandler partyleader;
 	private String status = "NotStarted";
 	private Game game;
-	Player p1, p2, p3, p4;
+	private int turns;
+	private ClientHandler playersturn;
 
 	/**
 	 * Constructor for the room
@@ -36,27 +39,26 @@ public class Room {
 	 * @param numplayers
 	 */
 	public void startGame(int numplayers) {
-
+		reset();
 		switch (numplayers) {
 		case 2:
-			p1 = new HumanPlayer(chl.get(0).getClientHandlerName(), Marble.WW);
-			p2 = new HumanPlayer(chl.get(1).getClientHandlerName(), Marble.BB);
-			game = new Game(p1, p2);
-			game.start();
+			chl.get(0).assignMarble(Marble.WW);
+			chl.get(1).assignMarble(Marble.BB);
+			serverboard = new Board(new Layout(2));
 			break;
 		case 3:
-			p1 = new HumanPlayer(chl.get(0).getClientHandlerName(), Marble.WW);
-			p2 = new HumanPlayer(chl.get(1).getClientHandlerName(), Marble.BB);
-			p3 = new HumanPlayer(chl.get(2).getClientHandlerName(), Marble.YY);
-			game = new Game(p1, p2, p3);
-			game.start();
+			chl.get(0).assignMarble(Marble.WW);
+			chl.get(1).assignMarble(Marble.BB);
+			chl.get(2).assignMarble(Marble.YY);
+			serverboard = new Board(new Layout(3));
+			break;
 		case 4:
-			p1 = new HumanPlayer(chl.get(0).getClientHandlerName(), Marble.WW);
-			p2 = new HumanPlayer(chl.get(1).getClientHandlerName(), Marble.YY);
-			p3 = new HumanPlayer(chl.get(2).getClientHandlerName(), Marble.BB);
-			p4 = new HumanPlayer(chl.get(3).getClientHandlerName(), Marble.RR);
-			game = new Game(p1, p2, p3, p4);
-			game.start();
+			chl.get(0).assignMarble(Marble.WW);
+			chl.get(1).assignMarble(Marble.YY);
+			chl.get(2).assignMarble(Marble.BB);
+			chl.get(3).assignMarble(Marble.RR);
+			serverboard = new Board(new Layout(4));
+			break;
 		}
 		status = "Started";
 	}
@@ -77,24 +79,10 @@ public class Room {
 		}
 	}
 
-	/**
-	 * Used to get the player each client handler controls.s
-	 * 
-	 * @param cl
-	 * @return
-	 */
-	public Player getPlayer(ClientHandler cl) {
-		switch (chl.indexOf(cl) + 1) {
-		case 1:
-			return p1;
-		case 2:
-			return p2;
-		case 3:
-			return p3;
-		case 4:
-			return p4;
-		}
-		return null;
+	public void reset() {
+		status = "NotStarted";
+		serverboard = new Board(new Layout(2));
+		turns = 0;
 	}
 
 	/**
@@ -102,6 +90,98 @@ public class Room {
 	 */
 	public Game getGame() {
 		return game;
+	}
+
+	// Makes move for the given coordinate
+
+	public String makeMove(ClientHandler cl, String coords, String direction) {
+		if (gameOver()) {
+			return printResult();
+		}
+		if (ClientTUI.numerical(direction)) {
+			if (cl.getClientHandlerName().equals(playerturn())) {
+				boolean valid = false;
+				String pos1, pos2, pos3;
+				String move = coords;
+				if (move.length() == 6) {
+					pos1 = move.charAt(0) + "" + move.charAt(1);
+					pos2 = move.charAt(2) + "" + move.charAt(3);
+					pos3 = move.charAt(4) + "" + move.charAt(5);
+					valid = serverboard.isValidMove(pos1, pos2, pos3, Integer.parseInt(direction), cl.getMarble());
+				} else if (move.length() == 4) {
+					pos1 = move.charAt(0) + "" + move.charAt(1);
+					pos2 = move.charAt(2) + "" + move.charAt(3);
+					valid = serverboard.isValidMove(pos1, pos2, Integer.parseInt(direction), cl.getMarble());
+				} else if (move.length() == 2) {
+					pos1 = move.charAt(0) + "" + move.charAt(1);
+					valid = serverboard.isValidMove(pos1, Integer.parseInt(direction), cl.getMarble());
+				}
+				if (valid) {
+					turns++;
+					if (gameOver()) {
+						return printResult();
+					}
+					return ProtocolMessages.MOVE + ProtocolMessages.DELIMITER + coords + ProtocolMessages.DELIMITER
+							+ direction + ProtocolMessages.DELIMITER + cl.getClientHandlerName() + "\n";
+				}
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "MoveNotAllowed\n";
+
+			}
+		}
+		
+		return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "NotYourTurn\n";
+	}
+
+	public boolean gameOver() {
+		return (serverboard.hasWinner() || turns == 96);
+	}
+
+	/**
+	 * Prints out the result of the game after the game is over. If there is a
+	 * winner, the winner(s) will be printed (depending on the number of players).
+	 */
+	public String printResult() {
+		if (serverboard.getLayout().returnPlayers().equals("four")) {
+			if (serverboard.hasWinner()) {
+				ClientHandler winner1 = null;
+				ClientHandler winner2 = null;
+				if (serverboard.isWinner(chl.get(0).getMarble())) {
+					winner1 = chl.get(0);
+					winner2 = chl.get(2);
+				} else if (serverboard.isWinner(chl.get(1).getMarble())) {
+					winner1 = chl.get(1);
+					winner2 = chl.get(3);
+				} else if (serverboard.isWinner(chl.get(2).getMarble())) {
+					winner1 = chl.get(2);
+					winner2 = chl.get(0);
+				} else if (serverboard.isWinner(chl.get(3).getMarble())) {
+					winner1 = chl.get(3);
+					winner2 = chl.get(1);
+				}
+				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + winner1.getClientHandlerName()
+						+ ProtocolMessages.DELIMITER + winner2.getClientHandlerName() + "\n";
+			} else {
+				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + "\n";
+			}
+		} else if (serverboard.getLayout().returnPlayers().equals("two")
+				|| serverboard.getLayout().returnPlayers().equals("three")) {
+			if (serverboard.hasWinner()) {
+				ClientHandler winner = null;
+				if (serverboard.isWinner(chl.get(0).getMarble())) {
+					winner = chl.get(0);
+				} else if (serverboard.isWinner(chl.get(1).getMarble())) {
+					winner = chl.get(1);
+				} else if (serverboard.isWinner(chl.get(2).getMarble())) {
+					winner = chl.get(2);
+				} else if (serverboard.isWinner(chl.get(3).getMarble())) {
+					winner = chl.get(3);
+				}
+				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + winner.getClientHandlerName() + "\n";
+			} else {
+				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + "\n";
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -113,6 +193,7 @@ public class Room {
 	public void addPlayer(ClientHandler cl) {
 		if (chl.isEmpty()) {
 			chl.add(cl);
+			cl.assignRoom(this);
 			partyleader = cl;
 		} else {
 			chl.add(cl);
@@ -122,22 +203,27 @@ public class Room {
 	/**
 	 * Removes a player from the room. NOT COMPLETELY IMPLEMENTED NOT COMPLETELY
 	 * IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT
-	 * COMPLETELY IMPLEMENTED
-	 * 
-	 * NOT COMPLETELY IMPLEMENTEDNOT COMPLETELY IMPLEMENTED NOT COMPLETELY
-	 * IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTED
+	 * COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTEDNOT COMPLETELY IMPLEMENTED
+	 * NOT COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT COMPLETELY
+	 * IMPLEMENTED
 	 * 
 	 * @param cl
 	 */
 	public void removePlayer(ClientHandler cl) {
 		if (chl.contains(cl)) {
-			if(chl.size()>1) {
+			if (chl.size() > 1 && getStatus().equals("NotStarted")) {
 				if (chl.get(0) == cl) {
-						partyleader = chl.get(1);
+					partyleader = chl.get(1);
 				}
 			}
-			
+			if (getStatus().equals("Started")) {
+				serverboard.removePlayersMarbles(cl.getMarble());
+			}
+			cl.assignRoom(null);
 			chl.remove(cl);
+			if (chl.size() <= 1) {
+				reset();
+			}
 		}
 	}
 
@@ -182,21 +268,25 @@ public class Room {
 	}
 
 	/**
+	 * Returns the player's turn
+	 * 
+	 * @return clienthandler's name
+	 */
+	public String playerturn() {
+		return chl.get(turns % chl.size()).getClientHandlerName();
+	}
+
+	public Board getBoard() {
+		return serverboard;
+	}
+
+	/**
 	 * Gets the clients in the room.
 	 * 
 	 * @return
 	 */
 	public List<ClientHandler> getPlayerList() {
 		return chl;
-	}
-
-	/**
-	 * Makes a move
-	 * 
-	 * @param p
-	 */
-	public void makeMove(Player p) {
-		p.determineMove(game.getBoard());
 	}
 
 }

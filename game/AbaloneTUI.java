@@ -51,9 +51,9 @@ public class AbaloneTUI {
 			System.out.println("Enter Player 4 name");
 			String p4input = sc.nextLine();
 			Player p1 = new HumanPlayer(p1input, Marble.WW);
-			Player p2 = new HumanPlayer(p2input, Marble.YY);
+			Player p2 = new HumanPlayer(p2input, Marble.RR);
 			Player p3 = new HumanPlayer(p3input, Marble.BB);
-			Player p4 = new HumanPlayer(p4input, Marble.RR);
+			Player p4 = new HumanPlayer(p4input, Marble.YY);
 			Game game = new Game(p1, p2, p3, p4);
 			game.start();
 		}

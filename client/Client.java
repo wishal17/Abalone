@@ -187,8 +187,8 @@ public class Client {
 		}
 	}
 	
-	public void makeMove(String move, int direction) throws ServerUnavailableException {
-		sendMessage(move);
+	public void makeMove(String move, String direction) throws ServerUnavailableException {
+		sendMessage(ProtocolMessages.MOVE+ProtocolMessages.DELIMITER+move+ProtocolMessages.DELIMITER+direction);
 	}
 
 	public void startGame() throws ServerUnavailableException {

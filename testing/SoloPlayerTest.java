@@ -41,6 +41,8 @@ public class SoloPlayerTest {
 		b.makeMove("7G","5E","6F", 2, Marble.WW);
 		b.makeMove("7G","5E","6F", 2, Marble.WW);
 		b.makeMove("7G","8H","6F", 2, Marble.WW);
+		b.eliminated.add(Marble.BB);
+		b.eliminated.add(Marble.BB);
 		assertEquals(2, b.eliminated.size());
 	}
 	

@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import exceptions.*;
@@ -46,11 +45,9 @@ public class Server implements Runnable {
 
 	/**
 	 * Opens a new socket by calling {@link #setup()} and starts a new ClientHandler
-	 * for every connecting client.
-	 * 
-	 * If {@link #setup()} throws a ExitProgram exception, stop the program. In case
-	 * of any other errors, ask the user whether the setup should be ran again to
-	 * open a new socket.
+	 * for every connecting client. If {@link #setup()} throws a ExitProgram
+	 * exception, stop the program. In case of any other errors, ask the user
+	 * whether the setup should be ran again to open a new socket.
 	 */
 	public void run() {
 		boolean openNewSocket = true;
@@ -108,8 +105,7 @@ public class Server implements Runnable {
 				ssock = new ServerSocket(port, 0, InetAddress.getByName("localhost"));
 				view.showMessage("Server started at port " + port);
 			} catch (IOException e) {
-				view.showMessage(
-						"ERROR: Invalid port number entered");
+				view.showMessage("ERROR: Invalid port number entered");
 
 				if (!view.getBoolean("Do you want to enter a different port number??(y/n)")) {
 					throw new ExitProgram("User indicated to exit program.");
@@ -150,15 +146,19 @@ public class Server implements Runnable {
 	 * @throws IOException
 	 */
 	public void sendMessagetoRoom(String msg, ClientHandler cl) throws IOException {
-		for (Room r : rooms) {
-			if (r.getPlayerList().contains(cl)) {
-				for (ClientHandler ch : r.getPlayerList()) {
-					ch.getOut().write(msg);
-					ch.getOut().newLine();
-					ch.getOut().flush();
+		if (msg.charAt(0) != 'E') {
+			for (Room r : rooms) {
+				if (r.getPlayerList().contains(cl)) {
+					for (ClientHandler ch : r.getPlayerList()) {
+						ch.getOut().write(msg);
+						ch.getOut().newLine();
+						ch.getOut().flush();
+					}
+					return;
 				}
-				return;
 			}
+		} else {
+			cl.sendMessage(msg);
 		}
 	}
 
@@ -172,10 +172,10 @@ public class Server implements Runnable {
 	public String getConnection(String name) {
 		for (ClientHandler c : clients) {
 			if (c.getClientHandlerName().equals(name)) {
-				return String.valueOf(ProtocolMessages.ERROR) + ProtocolMessages.DELIMITER + "Name taken";
+				return String.valueOf(ProtocolMessages.ERROR) + ProtocolMessages.DELIMITER + "NameTaken\n";
 			}
 		}
-		return (String.valueOf(ProtocolMessages.CONNECT) + ProtocolMessages.DELIMITER + name);
+		return ProtocolMessages.CONNECT + ProtocolMessages.DELIMITER + name + "\n";
 	}
 
 	/**
@@ -188,8 +188,10 @@ public class Server implements Runnable {
 		if (client.isinRoom() == true) {
 			removePlayerfromRoom(client);
 		}
+		client.assignRoom(null);
 		this.clients.remove(client);
-		return String.valueOf(ProtocolMessages.DISCONNECT) + ProtocolMessages.DELIMITER + client.getClientHandlerName();
+		return String.valueOf(ProtocolMessages.DISCONNECT) + ProtocolMessages.DELIMITER + client.getClientHandlerName()
+				+ "\n";
 	}
 
 	/**
@@ -206,18 +208,25 @@ public class Server implements Runnable {
 		int roomno;
 		try {
 			roomno = Integer.parseInt(roomnum);
+			if (rooms.get(roomno - 1).getStatus().equals("Started")) {
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "RoomHasStarted\n";
+			}
 			if (roomno < 1 || roomno > 10) {
-				return String.valueOf(ProtocolMessages.ERROR) + ProtocolMessages.DELIMITER + "Not a valid number\n";
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Not a valid number\n";
+			}
+			if (rooms.get(roomno - 1).getPlayerList().size() == 4) {
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Full\n";
 			}
 			if (rooms.get(roomno - 1).getPlayerList().contains(client)) {
 				rooms.get(roomno - 1).removePlayer(client);
 			}
 			rooms.get(roomno - 1).addPlayer(client);
+			client.assignRoom(rooms.get(roomno - 1));
 			client.addedtoRoom();
 			return (String.valueOf(ProtocolMessages.JOIN) + ProtocolMessages.DELIMITER + roomnum
 					+ ProtocolMessages.DELIMITER + client.getClientHandlerName() + "\n");
 		} catch (NumberFormatException e) {
-			return "Not a valid number\n";
+			return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Not a valid number\n";
 		}
 	}
 
@@ -227,25 +236,32 @@ public class Server implements Runnable {
 	 * (name is null) - Removing successful.
 	 * 
 	 * @requires guestName != null
-	 * @param guestName Name of the guest
+	 * @param client ClientHandler object
 	 * @return textual result, to be shown to the user
 	 */
 	public synchronized String removePlayerfromRoom(ClientHandler client) {
 		for (Room r : rooms) {
 			if (r.getPlayerList().contains(client)) {
+				if (r.getStatus().equals("Started")) {
+					for (String coords : r.getBoard().map.keySet()) {
+						if (r.getBoard().map.get(coords) == client.getMarble()) {
+							r.getBoard().map.replace(coords, Marble.EE);
+						}
+					}
+				}
 				r.removePlayer(client);
+				client.assignRoom(null);
 				client.removedfromRoom();
 				return ProtocolMessages.LEAVE + ProtocolMessages.DELIMITER + client.toString() + "\n";
 			}
 		}
-		return ProtocolMessages.ERROR+ProtocolMessages.DELIMITER+"Player is not in the room\n";
+		return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Player is not in a room\n";
 
 	}
 
 	/**
 	 * All rooms are returned. The result is returned as String. The result shows
 	 * the room number, status of the game, each players name
-	 * 
 	 * @return all rooms
 	 */
 	public String displayRooms() {
@@ -277,10 +293,10 @@ public class Server implements Runnable {
 			for (ClientHandler cl : r.getPlayerList()) {
 				if (cl.getClientHandlerName().equals(name)) {
 					r.leaderTeammate(cl);
-					return String.valueOf(ProtocolMessages.ALL) + ProtocolMessages.DELIMITER + name;
+					return String.valueOf(ProtocolMessages.ALL) + ProtocolMessages.DELIMITER + name + "\n";
 				}
 			}
-			return "Player not found";
+			return "Player not found\n";
 		}
 		return null;
 
@@ -289,36 +305,37 @@ public class Server implements Runnable {
 	/**
 	 * Starts the game when the party leader of a room decides to.
 	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * Doestnt work yet
+	 * 
 	 * @return textual result of the number of players, and each players name
 	 */
 	public String startGame(ClientHandler cl) {
 		String display = "";
-		System.out.println("hi hi hi hi hi hi");
+		if (!cl.isinRoom()) {
+			return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "NotInRoom\n";
+		}
 		for (Room r : rooms) {
-			System.out.println("hi hi hi hi hi hi");
-			if (r.isLeader(cl) && r.getNumPlayers() > 1) {
-				display = display + ProtocolMessages.START + ProtocolMessages.DELIMITER + r.getNumPlayers()
-						+ ProtocolMessages.DELIMITER;
-				for (ClientHandler ch : r.getPlayerList()) {
-					display = display + ch.getClientHandlerName() + ProtocolMessages.DELIMITER;
+			if (r.isLeader(cl)) {
+				if (r.getNumPlayers() > 1) {
+					display = display + ProtocolMessages.START + ProtocolMessages.DELIMITER + r.getNumPlayers()
+							+ ProtocolMessages.DELIMITER;
+					for (ClientHandler ch : r.getPlayerList()) {
+						display = display + ch.getClientHandlerName() + ProtocolMessages.DELIMITER;
+					}
+					r.startGame(r.getNumPlayers());
+					return display + "\n";
 				}
-				System.out.println("display below");
-				System.out.println(display);
-				r.startGame(r.getNumPlayers());
-				return display="\n";
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Empty\n";
 			}
 		}
-		return ProtocolMessages.ERROR+ProtocolMessages.DELIMITER+"InvalidPermission\n";
-		
+		return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "InvalidPermission\n";
+
 	}
-
-	// Makes move for the given coordinate
-
-	/* @return the string representation of the Hotel */
-
-	public String makeMove(ClientHandler cl, String coords, int direction) {
-		
-	 }
 
 	/**
 	 * Increments the number of turns every time a move is made.s

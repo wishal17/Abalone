@@ -78,7 +78,7 @@ public class HumanPlayer extends Player {
     			valid = board.isValidMove(pos1, direction, marble);
     		}
         }
-		++Board.turns;
+		++board.turns;
 	}
 
 }
