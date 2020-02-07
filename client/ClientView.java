@@ -7,9 +7,7 @@ import exceptions.ProtocolException;
 import exceptions.ServerUnavailableException;
 
 /**
- * Interface for the Hotel Client View.
- * 
- * @author Wim Kamerman
+ * Interface for the Client View.
  */
 public interface ClientView {
 

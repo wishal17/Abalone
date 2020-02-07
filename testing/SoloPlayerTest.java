@@ -19,32 +19,30 @@ public class SoloPlayerTest {
 
 	}
 
-	
-
 	/**
-	 * Test to check if marbles can push opponent marbles out of the board.
-	 * Also checks if the eliminated list is increased
+	 * Test to check if marbles can push opponent marbles out of the board. Also
+	 * checks if the eliminated list is increased
 	 */
 	@Test
 	public void testPush() {
 		b.reset();
-		b.makeMove("1A","2B","3C", 2, Marble.WW);
-		b.makeMove("9I","9H", 4, Marble.BB);
-		b.makeMove("4D","2B","3C", 2, Marble.WW);
-		b.makeMove("4D","5E","3C", 2, Marble.WW);
-		b.makeMove("4D","5E","6F", 2, Marble.WW);
-		b.makeMove("7G","5E","6F", 2, Marble.WW);
-		b.makeMove("7G","5E","6F", 2, Marble.WW);
-		b.makeMove("7G","8H","6F", 2, Marble.WW);
+		b.makeMove("1A", "2B", "3C", 2, Marble.WW);
+		b.makeMove("9I", "9H", 4, Marble.BB);
+		b.makeMove("4D", "2B", "3C", 2, Marble.WW);
+		b.makeMove("4D", "5E", "3C", 2, Marble.WW);
+		b.makeMove("4D", "5E", "6F", 2, Marble.WW);
+		b.makeMove("7G", "5E", "6F", 2, Marble.WW);
+		b.makeMove("7G", "5E", "6F", 2, Marble.WW);
+		b.makeMove("7G", "8H", "6F", 2, Marble.WW);
 		assertEquals(2, b.eliminated.size());
 	}
-	
+
 	/**
 	 * Test to check for game ending conditions.
 	 */
 	@Test
 	public void testGameEnd() {
-		//To check if the game ends if 6 opponent marbles (BB) have been eliminated
+		// To check if the game ends if 6 opponent marbles (BB) have been eliminated
 		b.reset();
 		b.eliminated.add(Marble.BB);
 		b.eliminated.add(Marble.BB);
@@ -57,14 +55,16 @@ public class SoloPlayerTest {
 		b.eliminated.add(Marble.BB);
 		assertTrue(b.gameOver());
 		assertTrue(b.isWinner(Marble.WW));
-		//To check if the game ends if 96 turns have been played. The turns are automatically 
-		//incremented in the room class.
+		// To check if the game ends if 96 turns have been played. The turns are
+		// automatically
+		// incremented in the room class.
 		b.reset();
 		b.turns = 95;
-		b.makeMove("3C", 1, Marble.WW); //When a move is performed the number of turns increase.
+		b.makeMove("3C", 1, Marble.WW); // When a move is performed the number of turns increase.
 		b.turns++;
 		assertTrue(b.gameOver());
 	}
+
 	/**
 	 * Test to check if the black marbles have been set up properly
 	 */
@@ -85,7 +85,7 @@ public class SoloPlayerTest {
 		assertEquals(Marble.BB, b.getMarble("6G"));
 		assertEquals(Marble.BB, b.getMarble("7G"));
 	}
-	
+
 	/**
 	 * Test to check if the white marbles have been set up properly
 	 */
@@ -106,7 +106,6 @@ public class SoloPlayerTest {
 		assertEquals(Marble.WW, b.getMarble("4A"));
 		assertEquals(Marble.WW, b.getMarble("5A"));
 	}
-	
 	/**
 	 * Used to test moving marbles
 	 */
@@ -115,7 +114,7 @@ public class SoloPlayerTest {
 		b.reset();
 		b.makeMove("3C", 2, Marble.WW);
 		assertEquals(Marble.WW, b.getMarble("4D"));
-		b.makeMove("5G", "6G" , "7G", 5, Marble.BB);
+		b.makeMove("5G", "6G", "7G", 5, Marble.BB);
 		assertEquals(Marble.BB, b.getMarble("4F"));
 		assertEquals(Marble.BB, b.getMarble("5F"));
 		assertEquals(Marble.BB, b.getMarble("6F"));
@@ -131,5 +130,3 @@ public class SoloPlayerTest {
 	}
 
 }
-
-

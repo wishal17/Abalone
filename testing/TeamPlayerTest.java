@@ -44,6 +44,7 @@ public class TeamPlayerTest {
 	 */
 	@Test
 	public void testGameEnd() {
+
 		//To check if the game ends if 6 opponent marbles (BB) have been eliminated
 		b.reset();
 		b.eliminated.add(Marble.BB);
@@ -70,6 +71,7 @@ public class TeamPlayerTest {
 		assertFalse(b.isWinner(Marble.WW));
 		assertFalse(b.isWinner(Marble.RR));
 	}
+	
 	/**
 	 * Test to check if the black marbles have been set up properly
 	 */

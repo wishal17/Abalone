@@ -29,9 +29,13 @@ public class ProtocolMessages {
 	public static final String MOVE = "M";
 	//Used to send errors
 	public static final String ERROR = "E";
+	//Used to indicate a player's turn
 	public static final String TURN = "T";
+	//Used to disconnect from a server
 	public static final String DISCONNECT = "D";
+	//Used to indicate the end of a game
 	public static final String FINISH = "F";
+	//Used to indicate the party leader's teammate
 	public static final String ALLY = "A";
 
 }

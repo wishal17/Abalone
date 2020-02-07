@@ -11,23 +11,23 @@ import exceptions.*;
 import game.*;
 import protocol.ProtocolMessages;
 
-/**
+/*
  * Server TUI for Abalone
  * 
  * Intended Functionality: interactively set up & monitor a new server
  */
 public class Server implements Runnable {
 
-	/** The ServerSocket of this Server */
+	/* The ServerSocket of this Server */
 	private ServerSocket ssock;
 
-	/** List of ClientHandlers, one for each connected client */
+	/* List of ClientHandlers, one for each connected client */
 	private List<ClientHandler> clients;
 
-	/** List of rooms, one for each connected client */
+	/* List of rooms, one for each connected client */
 	private List<Room> rooms = new ArrayList<Room>(10);
 
-	/** The view of this Server */
+	/* The view of this Server */
 	private ServerTUI view;
 
 	/**
@@ -332,7 +332,6 @@ public class Server implements Runnable {
 		return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "InvalidPermission\n";
 
 	}
-
 
 	// ------------------ Main --------------------------
 

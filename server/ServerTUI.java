@@ -23,17 +23,26 @@ public class ServerTUI implements ServerView {
 		read = new Scanner(System.in);
 	}
 
+	/**
+	 * Displays the message on the server's console
+	 */
 	@Override
 	public void showMessage(String message) {
 		System.out.print(message);
 	}
 
+	/**
+	 * Gets a string input from the client
+	 */
 	@Override
 	public String getString(String question) {
 		showMessage(question);
 		return read.nextLine();
 	}
 
+	/**
+	 * Gets an int input from the client
+	 */
 	@Override
 	public int getInt(String question) {
 		String result = getString(question);
@@ -43,6 +52,9 @@ public class ServerTUI implements ServerView {
 		return Integer.parseInt(result);
 	}
 
+	/**
+	 * Gets a booleaninput from the client
+	 */
 	@Override
 	public boolean getBoolean(String question) {
 		String b = getString(question);
@@ -55,6 +67,11 @@ public class ServerTUI implements ServerView {
 		}
 	}
 	
+	/**
+	 * Checks if an expected number is actually a number
+	 * @param s
+	 * @return true if a number else return false
+	 */
 	public boolean numerical(String s) {
 		try {
 			Integer.parseInt(s);

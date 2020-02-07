@@ -201,7 +201,11 @@ public class ClientHandler implements Runnable {
 		server.removeClient(this);
 	}
 
-
+	/**
+	 * Used to check if ch a type of ClientHandler
+	 * @param ch
+	 * @return true if it is of type ClientHandler else returns false
+	 */
 	public boolean equals(ClientHandler ch) {
 		if (ch instanceof ClientHandler) {
 			return this.toString().equals(ch.toString());
@@ -209,38 +213,71 @@ public class ClientHandler implements Runnable {
 		return false;
 	}
 
+	/**
+	 * Sets inroom to true for the ClientHandler
+	 */
 	public void addedtoRoom() {
 		inroom = true;
 	}
 
+	/**
+	 * Sets inroom to false for the ClientHandler
+	 */
 	public void removedfromRoom() {
 		inroom = false;
 	}
 
+	/**
+	 * Checks if a ClientHandler is in a room
+	 * @return true if in the room else false
+	 */
 	public boolean isinRoom() {
 		return inroom;
 	}
 
+	/**
+	 * Sets the ClientHandler to a room
+	 * @param r
+	 */
 	public void assignRoom(Room r) {
 		this.room = r;
 	}
 
+	/**
+	 * Returns the room in which the ClientHandler is in
+	 * @return
+	 */
 	public Room getRoom() {
 		return room;
 	}
 
+	/**
+	 * Returns which player's turn it is.
+	 * @return T;<playerturn>
+	 */
 	public String turn() {
 		return ProtocolMessages.TURN + ProtocolMessages.DELIMITER + room.playerturn() + "\n";
 	}
 
+	/**
+	 * Returns the ClientHandler's name
+	 * @return String format of the ClientHandler's name
+	 */
 	public String getClientHandlerName() {
 		return name;
 	}
 
+	/**
+	 * Assigns a marble to a ClientHandler
+	 * @param m
+	 */
 	public void assignMarble(Marble m) {
 		this.marble = m;
 	}
 
+	/**
+	 * @return marble of the CientHandler
+	 */
 	public Marble getMarble() {
 		return marble;
 	}

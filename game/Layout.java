@@ -10,6 +10,10 @@ public class Layout {
 	private Marble[] values;
 	private Map<String, Marble> LayoutMap = new LinkedHashMap<String, Marble>();
 	private String players;
+
+	/*
+	 * Constructor for Layout. Creates layouts depending on the number of players
+	 */
 	public Layout(int layout) {
 		/**
 		 * Coordinate scheme for the board To create a blank board, the YAXIS has been
@@ -19,13 +23,14 @@ public class Layout {
 
 		// "letter" is the string that temporarily holds the letter
 		String letter = "";
-		
+
 		// "number" is the string that temporarily holds the number
 		String number = "";
-		
-		// the boolean yComplete will be set to false when all x values for one y axis are added to LayoutMap
+
+		// the boolean yComplete will be set to false when all x values for one y axis
+		// are added to LayoutMap
 		boolean yIncomplete = true;
-		
+
 		// the integer n holds the value that will be put into the string "number"
 		int n = 1;
 
@@ -102,7 +107,7 @@ public class Layout {
 				}
 			}
 		}
-		
+
 		switch (layout) {
 
 		case 2: // 2-Player Game Formation.
@@ -160,9 +165,17 @@ public class Layout {
 		}
 	}
 
+	/* Returns the LinkedHashMap of the board */
 	public Map<String, Marble> returnLayoutMap() {
 		return LayoutMap;
 	}
+
+	/**
+	 * Returns the number of players as a String
+	 * 
+	 * @return "two" if int layout was 2, "three" if int layout was 3, "four"if int
+	 *         layout was 4.
+	 */
 	public String returnPlayers() {
 		return players;
 	}

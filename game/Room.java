@@ -277,6 +277,10 @@ public class Room {
 		return chl;
 	}
 
+	/**
+	 * Sets the status of the room to either "Started" or "NotStarted"
+	 * @param string
+	 */
 	public void setStatus(String string) {
 		status = string;
 	}

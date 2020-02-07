@@ -42,7 +42,6 @@ public class Board {
 
 	/**
 	 * Returns the number of players in an active match
-	 * 
 	 * @param l
 	 */
 	public int gamemode(Layout l) {

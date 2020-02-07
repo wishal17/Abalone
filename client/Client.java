@@ -150,16 +150,31 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Sends a message to the server to connect a client to the server
+	 * @param name
+	 * @throws ServerUnavailableException
+	 * @throws ProtocolException
+	 */
 	public void getConnection(String name) throws ServerUnavailableException, ProtocolException {
 		sendMessage(ProtocolMessages.CONNECT + ProtocolMessages.DELIMITER + name);
 	}
 
+	/**
+	 * Send a message to the server to allow a client to disconnect.
+	 * @throws ServerUnavailableException
+	 */
 	public void sendDisconnect() throws ServerUnavailableException {
 		sendMessage(String.valueOf(ProtocolMessages.DISCONNECT));
 		notExited = false;
 		closeConnection();
 	}
 
+	/**
+	 * Sends a message to the server to allow the client to join a room
+	 * @param roomnum
+	 * @throws ServerUnavailableException
+	 */
 	public void joinRoom(String roomnum) throws ServerUnavailableException {
 		if (!roomnum.equals(null)) {
 			sendMessage(String.valueOf(ProtocolMessages.JOIN) + String.valueOf(ProtocolMessages.DELIMITER) + roomnum);
@@ -168,29 +183,56 @@ public class Client {
 		}
 	}
 
+	/**
+	 * Sends a message to the server to allow the client to leave a room
+	 * @throws ServerUnavailableException
+	 */
 	public void leaveRoom() throws ServerUnavailableException {
 		sendMessage(String.valueOf(ProtocolMessages.LEAVE) + String.valueOf(ProtocolMessages.DELIMITER));
 	}
 
+	/**
+	 * Sends a message to the server to display all rooms to the client
+	 * @throws ServerUnavailableException
+	 */
 	public void displayRooms() throws ServerUnavailableException {
 		sendMessage(String.valueOf(ProtocolMessages.ROOM) + String.valueOf(ProtocolMessages.DELIMITER));
 	}
 
+	/**
+	 * Sends a message to the server to assign a player to the the party leader's team
+	 * @param name
+	 * @throws ServerUnavailableException
+	 */
 	public void leaderTeammate(String name) throws ServerUnavailableException {
 		if (!name.equals(null)) {
 			sendMessage(String.valueOf(ProtocolMessages.ALLY) + String.valueOf(ProtocolMessages.DELIMITER) + name);
 		}
 	}
 
+	/**
+	 * Sends a message to the server to make a move
+	 * @param move
+	 * @param direction
+	 * @throws ServerUnavailableException
+	 */
 	public void makeMove(String move, String direction) throws ServerUnavailableException {
 		sendMessage(ProtocolMessages.MOVE + ProtocolMessages.DELIMITER + move + ProtocolMessages.DELIMITER + direction);
 	}
 
+	/**
+	 * Sends a message to the server to start a game.
+	 * @throws ServerUnavailableException
+	 */
 	public void startGame() throws ServerUnavailableException {
 		sendMessage((String.valueOf(ProtocolMessages.START) + String.valueOf(ProtocolMessages.DELIMITER)));
 		//showMessage(">" + readLineFromServer());
 	}
 
+	/**
+	 * Prints out a message
+	 * @param message
+	 */
 	public void showMessage(String message) {
 		System.out.println(message);
 	}

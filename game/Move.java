@@ -34,7 +34,7 @@ public class Move {
 	}
 
 	/**
-	 * 
+	 * Gets the next coordinate of a marble in the given direction
 	 * @param pos
 	 * @param direction
 	 * @return the next coordinate in the given direction

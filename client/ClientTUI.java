@@ -21,6 +21,8 @@ public class ClientTUI implements ClientView, Runnable {
 	Board localboard;
 	private List<String> names;
 	private boolean started = false;
+	private InetAddress ip;
+	private int port;
 
 	public ClientTUI() {
 		client = new Client();
@@ -37,9 +39,9 @@ public class ClientTUI implements ClientView, Runnable {
 	@Override
 	public void start() throws ServerUnavailableException, ProtocolException {
 		try {
-			InetAddress ip = getIp();
+			ip = getIp();
 			while(client.serverSock == null) {
-				int port = getInt("Port: ");
+				port = getInt("Port: ");
 				showMessage("Attempting to connect to " + ip + ":" + port + "...");
 				try {
 					client.createConnection(ip, port);
@@ -321,6 +323,11 @@ public class ClientTUI implements ClientView, Runnable {
 		}
 	}
 
+	/**
+	 * Used to check if an expected number is indeed a number
+	 * @param s
+	 * @return true if is a number else returns false
+	 */
 	public static boolean numerical(String s) {
 		try {
 			Integer.parseInt(s);
