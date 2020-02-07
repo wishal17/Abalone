@@ -341,10 +341,16 @@ public class Move{
 					return true;
 				} else {
 					if (b.getMarble(threenextheadcoord) == null) {
-						b.map.put(onenextheadcoord, m);
-						b.map.put(twonextheadcoord, onenexttoheadMarble);
-						b.map.put(endcoord, Marble.EE);
-						b.eliminated.add(twonexttoheadMarble);
+						if(b.getMarble(twonextheadcoord)!=Marble.EE) {
+							b.map.put(onenextheadcoord, m);
+							b.map.put(twonextheadcoord, onenexttoheadMarble);
+							b.map.put(endcoord, Marble.EE);
+							b.eliminated.add(twonexttoheadMarble);
+						} else if(b.getMarble(twonextheadcoord)==Marble.EE) {
+							b.map.put(onenextheadcoord, m);
+							b.map.put(twonextheadcoord, onenexttoheadMarble);
+							b.map.put(endcoord, Marble.EE);
+						}
 						return true;
 					} else if (b.getMarble(threenextheadcoord) == Marble.EE) {
 						b.map.put(threenextheadcoord, twonexttoheadMarble);

@@ -1,7 +1,5 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,8 +11,6 @@ import exceptions.ProtocolException;
 import exceptions.ServerUnavailableException;
 import game.Board;
 import game.Layout;
-import game.Marble;
-import game.Player;
 import protocol.ProtocolMessages;
 
 public class ClientTUI implements ClientView, Runnable {
