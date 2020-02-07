@@ -172,7 +172,9 @@ public class ClientHandler implements Runnable {
 			switch (s1) {
 			case "M":
 				server.sendMessagetoRoom(this.getRoom().makeMove(this, s2, s3), this);
-				server.sendMessagetoRoom(turn(), this);
+				if(this.getRoom().getStatus().equals("Started")) {
+					server.sendMessagetoRoom(turn(), this);
+				}
 				break;
 			default:
 				out.write("Unknown command: " + s1);

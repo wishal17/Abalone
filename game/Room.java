@@ -20,7 +20,6 @@ public class Room {
 	private List<ClientHandler> chl = new ArrayList<ClientHandler>();
 	private ClientHandler partyleader;
 	private String status = "NotStarted";
-	private Game game;
 	private int turns;
 	private ClientHandler playersturn;
 
@@ -85,19 +84,13 @@ public class Room {
 		turns = 0;
 	}
 
-	/**
-	 * Returns the game.
-	 */
-	public Game getGame() {
-		return game;
-	}
-
 	// Makes move for the given coordinate
 
 	public String makeMove(ClientHandler cl, String coords, String direction) {
 		if (gameOver()) {
-			return printResult();
+			return printResult(null);
 		}
+
 		if (ClientTUI.numerical(direction)) {
 			if (cl.getClientHandlerName().equals(playerturn())) {
 				boolean valid = false;
@@ -119,7 +112,7 @@ public class Room {
 				if (valid) {
 					turns++;
 					if (gameOver()) {
-						return printResult();
+						return printResult(null);
 					}
 					return ProtocolMessages.MOVE + ProtocolMessages.DELIMITER + coords + ProtocolMessages.DELIMITER
 							+ direction + ProtocolMessages.DELIMITER + cl.getClientHandlerName() + "\n";
@@ -140,7 +133,7 @@ public class Room {
 	 * Prints out the result of the game after the game is over. If there is a
 	 * winner, the winner(s) will be printed (depending on the number of players).
 	 */
-	public String printResult() {
+	public String printResult(ClientHandler client) {
 		if (serverboard.getLayout().returnPlayers().equals("four")) {
 			if (serverboard.hasWinner()) {
 				ClientHandler winner1 = null;
@@ -165,6 +158,9 @@ public class Room {
 			}
 		} else if (serverboard.getLayout().returnPlayers().equals("two")
 				|| serverboard.getLayout().returnPlayers().equals("three")) {
+			if(client != null) {
+				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + chl.get(0).getClientHandlerName()+"\n";
+			}
 			if (serverboard.hasWinner()) {
 				ClientHandler winner = null;
 				if (serverboard.isWinner(chl.get(0).getMarble())) {
@@ -197,21 +193,17 @@ public class Room {
 			partyleader = cl;
 		} else {
 			chl.add(cl);
+			cl.assignRoom(this);
 		}
 	}
 
 	/**
-	 * Removes a player from the room. NOT COMPLETELY IMPLEMENTED NOT COMPLETELY
-	 * IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT
-	 * COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTEDNOT COMPLETELY IMPLEMENTED
-	 * NOT COMPLETELY IMPLEMENTED NOT COMPLETELY IMPLEMENTED NOT COMPLETELY
-	 * IMPLEMENTED
-	 * 
+	 * Removes a player from the room.
 	 * @param cl
 	 */
 	public void removePlayer(ClientHandler cl) {
 		if (chl.contains(cl)) {
-			if (chl.size() > 1 && getStatus().equals("NotStarted")) {
+			if (chl.size() > 1) {
 				if (chl.get(0) == cl) {
 					partyleader = chl.get(1);
 				}
@@ -221,9 +213,6 @@ public class Room {
 			}
 			cl.assignRoom(null);
 			chl.remove(cl);
-			if (chl.size() <= 1) {
-				reset();
-			}
 		}
 	}
 
@@ -287,6 +276,10 @@ public class Room {
 	 */
 	public List<ClientHandler> getPlayerList() {
 		return chl;
+	}
+
+	public void setStatus(String string) {
+		status = string;
 	}
 
 }

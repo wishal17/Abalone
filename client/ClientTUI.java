@@ -132,7 +132,7 @@ public class ClientTUI implements ClientView, Runnable {
 			System.out.println(localboard.printBoardValues());
 			break;
 		case "T":
-			System.out.println("It is " + messages[1] + "'s turn.("
+			System.out.println("It is " + messages[1] + "'s turn("
 					+ localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])) + ")");
 			break;
 		case "F":

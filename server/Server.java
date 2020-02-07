@@ -17,7 +17,6 @@ import protocol.ProtocolMessages;
  * Intended Functionality: interactively set up & monitor a new server
  */
 public class Server implements Runnable {
-	private Game g;
 
 	/** The ServerSocket of this Server */
 	private ServerSocket ssock;
@@ -242,14 +241,15 @@ public class Server implements Runnable {
 	public synchronized String removePlayerfromRoom(ClientHandler client) {
 		for (Room r : rooms) {
 			if (r.getPlayerList().contains(client)) {
-				if (r.getStatus().equals("Started")) {
-					for (String coords : r.getBoard().map.keySet()) {
-						if (r.getBoard().map.get(coords) == client.getMarble()) {
-							r.getBoard().map.replace(coords, Marble.EE);
-						}
-					}
-				}
 				r.removePlayer(client);
+				if(r.getStatus().equals("Started") && r.getPlayerList().size()==1) {
+					try {
+						r.getPlayerList().get(0).sendMessage(r.printResult(client));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					r.setStatus("NotStarted");
+				}
 				client.assignRoom(null);
 				client.removedfromRoom();
 				return ProtocolMessages.LEAVE + ProtocolMessages.DELIMITER + client.toString() + "\n";
