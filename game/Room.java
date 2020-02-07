@@ -21,6 +21,7 @@ public class Room {
 	private ClientHandler partyleader;
 	private String status = "NotStarted";
 	private int turns;
+
 	/**
 	 * Constructor for the room
 	 * 
@@ -204,6 +205,9 @@ public class Room {
 				}
 			}
 			if (getStatus().equals("Started")) {
+				if (playerturn() == cl.getClientHandlerName()) {
+					turns++;
+				}
 				serverboard.removePlayersMarbles(cl.getMarble());
 			}
 			cl.assignRoom(null);

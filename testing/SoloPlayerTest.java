@@ -41,8 +41,6 @@ public class SoloPlayerTest {
 		b.makeMove("7G","5E","6F", 2, Marble.WW);
 		b.makeMove("7G","5E","6F", 2, Marble.WW);
 		b.makeMove("7G","8H","6F", 2, Marble.WW);
-		b.eliminated.add(Marble.BB);
-		b.eliminated.add(Marble.BB);
 		assertEquals(2, b.eliminated.size());
 	}
 	
@@ -65,7 +63,7 @@ public class SoloPlayerTest {
 		assertTrue(b.gameOver());
 		assertTrue(b.isWinner(Marble.WW));
 		//To check if the game ends if 96 turns have been played. The turns are automatically 
-		//incremented in the human player class.
+		//incremented in the room class.
 		b.reset();
 		b.turns = 95;
 		b.makeMove("3C", 1, Marble.WW); //When a move is performed the number of turns increase.

@@ -27,9 +27,6 @@ public class Server implements Runnable {
 	/** List of rooms, one for each connected client */
 	private List<Room> rooms = new ArrayList<Room>(10);
 
-	/** Incrementer for turns **/
-	public static int turns = 0;
-
 	/** The view of this Server */
 	private ServerTUI view;
 
@@ -336,12 +333,6 @@ public class Server implements Runnable {
 
 	}
 
-	/**
-	 * Increments the number of turns every time a move is made.s
-	 */
-	public void incturn() {
-		++turns;
-	}
 
 	// ------------------ Main --------------------------
 

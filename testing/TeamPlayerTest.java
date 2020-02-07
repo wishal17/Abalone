@@ -66,7 +66,7 @@ public class TeamPlayerTest {
 		assertTrue(b.isWinner(Marble.WW));
 		assertTrue(b.isWinner(Marble.BB));
 		//To check if the game ends if 96 turns have been played. The turns are automatically 
-		//incremented in the human player class.
+		//incremented in the Room class.
 		b.reset();
 		b.turns = 95;
 		b.makeMove("3D", 2, Marble.WW); //When a move is performed the number of turns increase.

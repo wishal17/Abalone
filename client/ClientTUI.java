@@ -19,7 +19,8 @@ public class ClientTUI implements ClientView, Runnable {
 	private boolean connected = false;
 	Scanner read;
 	Board localboard;
-	private List<String> names = new ArrayList<String>();
+	private List<String> names;
+	private boolean started = false;
 
 	public ClientTUI() {
 		client = new Client();
@@ -124,22 +125,31 @@ public class ClientTUI implements ClientView, Runnable {
 			System.out.println(messages[2] + " has joined room " + messages[1]);
 			break;
 		case "L":
+			if(started) {
+				localboard.removePlayersMarbles(localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])));
+				System.out.println(localboard.printBoardCoords());
+				System.out.println(localboard.printBoardValues());
+			}
+			started = false;
 			System.out.println(messages[1] + " has left a room");
 			break;
+
 		case "S":
+			names = new ArrayList<>();
 			System.out.println("A new game with " + messages[1] + " players has started in this room.\n");
 			localboard = new Board(new Layout((Integer.parseInt(messages[1]))));
 			for (int i = 2; i < messages.length; i++) {
 				names.add(messages[i]);
 			}
+			started = true;
 			System.out.println(localboard.printBoardCoords());
 			System.out.println(localboard.printBoardValues());
 			break;
 		case "T":
-			System.out.println("It is " + messages[1] + "'s turn("
-					+ localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])) + ")");
+			System.out.println("It is " + messages[1] + "'s turn!");
 			break;
 		case "F":
+			started = false;
 			if(messages.length==3) {
 				System.out.println(messages[2]+" and "+messages[1]+" are the winners!");
 			} else if (messages.length==2) {
@@ -147,6 +157,14 @@ public class ClientTUI implements ClientView, Runnable {
 			} else {
 				System.out.println("Draw there is no winner!");
 			}
+			break;
+		case "D":
+			if(started) {
+				localboard.removePlayersMarbles(localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])));
+				System.out.println(localboard.printBoardCoords());
+				System.out.println(localboard.printBoardValues());
+			}
+			System.out.println(messages[1]+" has left the server");
 			break;
 		case "A":
 			System.out.println("The party leader chose "+messages[1]+" as their teammate");
