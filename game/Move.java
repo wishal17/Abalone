@@ -5,8 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class Move{
+public class Move {
 	private Board b;
+
 	public Move(Board board) {
 		this.b = board;
 		// TODO Auto-generated constructor stub
@@ -92,8 +93,7 @@ public class Move{
 			} else {
 				return false;
 			}
-		} else if (b.getLayout().returnPlayers().equals("three")
-				|| b.getLayout().returnPlayers().equals("two")) {
+		} else if (b.getLayout().returnPlayers().equals("three") || b.getLayout().returnPlayers().equals("two")) {
 			if (b.getMarble(onenexttohead) != m
 					&& (b.getMarble(twonexttohead) == null || b.getMarble(twonexttohead) == Marble.EE)) {
 				return true;
@@ -118,14 +118,17 @@ public class Move{
 		String twonexttohead = nextCoordinates(onenexttohead, direction);
 		String threenexttohead = nextCoordinates(twonexttohead, direction);
 		if (b.getLayout().returnPlayers().equals("four")) {
+			if (!m.isTeammate(b.getMarble(onenexttohead))
+					&& (b.getMarble(twonexttohead) == null || b.getMarble(twonexttohead) == Marble.EE)) {
+				return true;
+			}
 			if (!m.isTeammate(b.getMarble(onenexttohead)) && !m.isTeammate(b.getMarble(twonexttohead))
 					&& (b.getMarble(threenexttohead) == null || b.getMarble(threenexttohead) == Marble.EE)) {
 				return true;
 			} else {
 				return false;
 			}
-		} else if (b.getLayout().returnPlayers().equals("three")
-				|| b.getLayout().returnPlayers().equals("two")) {
+		} else if (b.getLayout().returnPlayers().equals("three") || b.getLayout().returnPlayers().equals("two")) {
 			if (b.getMarble(onenexttohead) != m && b.getMarble(twonexttohead) != m
 					&& (b.getMarble(threenexttohead) == null || b.getMarble(threenexttohead) == Marble.EE)) {
 				return true;
@@ -227,8 +230,7 @@ public class Move{
 		String nextendcoord = nextCoordinates(endcoord, direction);
 		if ((nextCoordinates(list.get(1), direction).equals(list.get(0)))
 				|| (nextCoordinates(list.get(0), direction).equals(list.get(1)))) {
-			if (b.map.get(pos1) == m && b.map.get(pos2) == m && b.map.get(pos3) == m
-					&& (!b.hasMarble(nextheadcoord))) {
+			if (b.map.get(pos1) == m && b.map.get(pos2) == m && b.map.get(pos3) == m && (!b.hasMarble(nextheadcoord))) {
 				b.map.put(nextheadcoord, m);
 				b.map.put(nextendcoord, m);
 				b.map.put(endcoord, Marble.EE);
@@ -341,12 +343,12 @@ public class Move{
 					return true;
 				} else {
 					if (b.getMarble(threenextheadcoord) == null) {
-						if(b.getMarble(twonextheadcoord)!=Marble.EE) {
+						if (b.getMarble(twonextheadcoord) != Marble.EE) {
 							b.map.put(onenextheadcoord, m);
 							b.map.put(twonextheadcoord, onenexttoheadMarble);
 							b.map.put(endcoord, Marble.EE);
 							b.eliminated.add(twonexttoheadMarble);
-						} else if(b.getMarble(twonextheadcoord)==Marble.EE) {
+						} else if (b.getMarble(twonextheadcoord) == Marble.EE) {
 							b.map.put(onenextheadcoord, m);
 							b.map.put(twonextheadcoord, onenexttoheadMarble);
 							b.map.put(endcoord, Marble.EE);

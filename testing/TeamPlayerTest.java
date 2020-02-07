@@ -1,12 +1,8 @@
 package testing;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,10 +33,9 @@ public class TeamPlayerTest {
 		b.makeMove("8I", 3, Marble.RR);
 		b.makeMove("4E","2C","3D", 2, Marble.WW);
 		b.makeMove("4E","5F","3D", 2, Marble.WW);
-		b.eliminated.add(Marble.RR);
-		b.makeMove("7H","5F","6G", 2, Marble.WW);
-		b.eliminated.add(Marble.RR);
-		System.out.println(b.printBoardValues());
+		b.makeMove("4E", "5F", "6G", 2, Marble.WW);
+		System.out.println(b.printBoardValues()+"\n"+b.printBoardCoords());
+		b.makeMove("7H", "5F", "6G", 2, Marble.WW);
 		assertEquals(2, b.eliminated.size());
 	}
 	
