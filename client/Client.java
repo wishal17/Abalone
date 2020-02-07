@@ -17,7 +17,7 @@ import protocol.*;
  */
 public class Client {
 
-	private Socket serverSock;
+	public Socket serverSock;
 	private BufferedReader in;
 	private BufferedWriter out;
 	private Scanner user;
@@ -62,23 +62,21 @@ public class Client {
 	 * The method continues to ask for an IP and port and attempts to connect until
 	 * a connection is established or until the user indicates to exit the program.
 	 * 
-	 * @throws ExitProgram if a connection is not established and the user indicates
-	 *                     to want to exit the program.
+	 * @throws ExitProgram             if a connection is not established and the
+	 *                                 user indicates to want to exit the program.
+	 * @throws NoServerOnPortException
 	 * @ensures serverSock contains a valid socket connection to a server
 	 */
-	public void createConnection(InetAddress addr, int port) throws ExitProgram {
+	public void createConnection(InetAddress addr, int port) throws ExitProgram, NoServerOnPortException {
 		clearConnection();
-		while (serverSock == null) {
-			// try to open a Socket to the server
-			try {
-				serverSock = new Socket(addr, port);
-				in = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
-				out = new BufferedWriter(new OutputStreamWriter(serverSock.getOutputStream()));
-			} catch (IOException e) {
-				showMessage("ERROR: could not create a socket on " + addr.toString() + " and port " + port + ".");
-			}
+		// try to open a Socket to the server
+		try {
+			serverSock = new Socket(addr, port);
+			in = new BufferedReader(new InputStreamReader(serverSock.getInputStream()));
+			out = new BufferedWriter(new OutputStreamWriter(serverSock.getOutputStream()));
+		} catch (IOException e) {
+			throw new NoServerOnPortException(port);
 		}
-		System.out.println("Connected.");
 	}
 
 	/**
@@ -153,7 +151,7 @@ public class Client {
 	}
 
 	public void getConnection(String name) throws ServerUnavailableException, ProtocolException {
-		sendMessage(ProtocolMessages.CONNECT+ProtocolMessages.DELIMITER+name);
+		sendMessage(ProtocolMessages.CONNECT + ProtocolMessages.DELIMITER + name);
 	}
 
 	public void sendDisconnect() throws ServerUnavailableException {
@@ -180,20 +178,17 @@ public class Client {
 
 	public void leaderTeammate(String name) throws ServerUnavailableException {
 		if (!name.equals(null)) {
-			sendMessage(String.valueOf(ProtocolMessages.ROOM) + String.valueOf(ProtocolMessages.DELIMITER) + name);
-			showMessage(">" + readLineFromServer());
-		} else {
-			showMessage("Please enter a valid player name");
+			sendMessage(String.valueOf(ProtocolMessages.ALLY) + String.valueOf(ProtocolMessages.DELIMITER) + name);
 		}
 	}
-	
+
 	public void makeMove(String move, String direction) throws ServerUnavailableException {
-		sendMessage(ProtocolMessages.MOVE+ProtocolMessages.DELIMITER+move+ProtocolMessages.DELIMITER+direction);
+		sendMessage(ProtocolMessages.MOVE + ProtocolMessages.DELIMITER + move + ProtocolMessages.DELIMITER + direction);
 	}
 
 	public void startGame() throws ServerUnavailableException {
 		sendMessage((String.valueOf(ProtocolMessages.START) + String.valueOf(ProtocolMessages.DELIMITER)));
-		showMessage(">" + readLineFromServer());
+		//showMessage(">" + readLineFromServer());
 	}
 
 	public void showMessage(String message) {

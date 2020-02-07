@@ -32,6 +32,6 @@ public class ProtocolMessages {
 	public static final String TURN = "T";
 	public static final String DISCONNECT = "D";
 	public static final String FINISH = "F";
-	public static final String ALL = "A";
+	public static final String ALLY = "A";
 
 }

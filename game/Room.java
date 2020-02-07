@@ -21,8 +21,6 @@ public class Room {
 	private ClientHandler partyleader;
 	private String status = "NotStarted";
 	private int turns;
-	private ClientHandler playersturn;
-
 	/**
 	 * Constructor for the room
 	 * 
@@ -68,13 +66,11 @@ public class Room {
 	 * @param cl
 	 */
 	public void leaderTeammate(ClientHandler cl) {
-		for (ClientHandler c : getPlayerList()) {
-			if (c == cl || getPlayerList().get(2) != c) {
-				int leaderteampos = getPlayerList().indexOf(c);
-				ClientHandler temp = getPlayerList().get(2);
-				getPlayerList().set(2, cl);
-				getPlayerList().set(leaderteampos, temp);
-			}
+		if (getPlayerList().size() == 4 && getStatus().equals("NotStarted") && chl.contains(cl) && cl != partyleader) {
+			ClientHandler temp = chl.get(2);
+			int initpos = chl.indexOf(cl);
+			chl.set(2, cl);
+			chl.set(initpos, temp);
 		}
 	}
 
@@ -118,10 +114,8 @@ public class Room {
 							+ direction + ProtocolMessages.DELIMITER + cl.getClientHandlerName() + "\n";
 				}
 				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "MoveNotAllowed\n";
-
 			}
 		}
-		
 		return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "NotYourTurn\n";
 	}
 
@@ -158,8 +152,8 @@ public class Room {
 			}
 		} else if (serverboard.getLayout().returnPlayers().equals("two")
 				|| serverboard.getLayout().returnPlayers().equals("three")) {
-			if(client != null) {
-				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + chl.get(0).getClientHandlerName()+"\n";
+			if (client != null) {
+				return ProtocolMessages.FINISH + ProtocolMessages.DELIMITER + chl.get(0).getClientHandlerName() + "\n";
 			}
 			if (serverboard.hasWinner()) {
 				ClientHandler winner = null;
@@ -199,6 +193,7 @@ public class Room {
 
 	/**
 	 * Removes a player from the room.
+	 * 
 	 * @param cl
 	 */
 	public void removePlayer(ClientHandler cl) {

@@ -100,11 +100,11 @@ public class Server implements Runnable {
 			int port = view.getInt("Enter the server port: ");
 			try {
 				// try to open a new ServerSocket
-				view.showMessage("Attempting to open a socket at localhost " + "on port number: " + port + "...");
+				view.showMessage("Attempting to open a socket at localhost " + "on port number: " + port + "...\n");
 				ssock = new ServerSocket(port, 0, InetAddress.getByName("localhost"));
 				view.showMessage("Server started at port " + port);
 			} catch (IOException e) {
-				view.showMessage("ERROR: Invalid port number entered");
+				view.showMessage("\nERROR: Invalid port number entered. Please enter a valid port number");
 
 				if (!view.getBoolean("Do you want to enter a different port number??(y/n)")) {
 					throw new ExitProgram("User indicated to exit program.");
@@ -149,9 +149,7 @@ public class Server implements Runnable {
 			for (Room r : rooms) {
 				if (r.getPlayerList().contains(cl)) {
 					for (ClientHandler ch : r.getPlayerList()) {
-						ch.getOut().write(msg);
-						ch.getOut().newLine();
-						ch.getOut().flush();
+						ch.sendMessage(msg);
 					}
 					return;
 				}
@@ -242,7 +240,7 @@ public class Server implements Runnable {
 		for (Room r : rooms) {
 			if (r.getPlayerList().contains(client)) {
 				r.removePlayer(client);
-				if(r.getStatus().equals("Started") && r.getPlayerList().size()==1) {
+				if (r.getStatus().equals("Started") && r.getPlayerList().size() == 1) {
 					try {
 						r.getPlayerList().get(0).sendMessage(r.printResult(client));
 					} catch (IOException e) {
@@ -262,6 +260,7 @@ public class Server implements Runnable {
 	/**
 	 * All rooms are returned. The result is returned as String. The result shows
 	 * the room number, status of the game, each players name
+	 * 
 	 * @return all rooms
 	 */
 	public String displayRooms() {
@@ -293,12 +292,12 @@ public class Server implements Runnable {
 			for (ClientHandler cl : r.getPlayerList()) {
 				if (cl.getClientHandlerName().equals(name)) {
 					r.leaderTeammate(cl);
-					return String.valueOf(ProtocolMessages.ALL) + ProtocolMessages.DELIMITER + name + "\n";
+					return ProtocolMessages.ALLY + ProtocolMessages.DELIMITER + name + "\n";
 				}
 			}
-			return "Player not found\n";
+			return ProtocolMessages.ALLY + ProtocolMessages.DELIMITER + "PlayerNotFound\n";
 		}
-		return null;
+		return ProtocolMessages.ALLY + ProtocolMessages.DELIMITER + "DidntWorkLol\n";
 
 	}
 

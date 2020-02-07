@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import exceptions.ExitProgram;
+import exceptions.NoServerOnPortException;
 import exceptions.ProtocolException;
 import exceptions.ServerUnavailableException;
 import game.Board;
@@ -40,9 +41,16 @@ public class ClientTUI implements ClientView, Runnable {
 	public void start() throws ServerUnavailableException, ProtocolException {
 		try {
 			InetAddress ip = getIp();
-			int port = getInt("Port: ");
-			showMessage("Attempting to connect to " + ip + ":" + port + "...");
-			client.createConnection(ip, port);
+			while(client.serverSock == null) {
+				int port = getInt("Port: ");
+				showMessage("Attempting to connect to " + ip + ":" + port + "...");
+				try {
+					client.createConnection(ip, port);
+					break;
+				} catch (NoServerOnPortException e1) {
+					System.out.println("\nPort number invalid. Please enter a valid port number");
+				}
+			}
 			connected = true;
 
 			String response = "";
@@ -50,7 +58,7 @@ public class ClientTUI implements ClientView, Runnable {
 			String name = "";
 			while (!valid) {
 				while (name.equals("") || name == null) {
-					name = getString("Not Connected. " + "Please enter a name to connect to the server:");
+					name = getString("\nNot Connected. \nPlease enter a name to connect to the server:");
 					valid = true;
 				}
 				client.start(name);
@@ -143,7 +151,9 @@ public class ClientTUI implements ClientView, Runnable {
 			} else {
 				System.out.println("Draw there is no winner!");
 			}
-			
+			break;
+		case "A":
+			System.out.println("The party leader chose "+messages[1]+" as their teammate");
 			break;
 		case "M":
 			String pos1, pos2, pos3;
@@ -166,7 +176,7 @@ public class ClientTUI implements ClientView, Runnable {
 			}
 			System.out.println(localboard.printBoardCoords());
 			System.out.println(localboard.printBoardValues());
-			System.out.println("eliminated marbles: " + localboard.eliminated.size());
+			System.out.println("eliminated marbles: " + localboard.eliminated);
 			System.out.println(messages[3] + " has moved " + messages[1] + " in the direction " + messages[2]);
 			break;
 		case "E":

@@ -94,10 +94,9 @@ public class ClientHandler implements Runnable {
 
 	/**
 	 * Handles commands received from the client by calling the according methods at
-	 * the server. For example, when the message "C;Name" is received, the method
-	 * server.getConnection(String name) of server should be called and the output
+	 * the server. For example, when the message "J;<roomnumber>" is received, the method
+	 * addPlayertoRoom() of server should be called and the output
 	 * must be sent to the client.
-	 * 
 	 * If the received input is not valid, send an "Unknown Command" message to the
 	 * server.
 	 * 
@@ -157,6 +156,7 @@ public class ClientHandler implements Runnable {
 				}
 				break;
 			case "A":
+				System.out.println("case A");
 				server.sendMessagetoRoom(server.leaderTeammate(s2), this);
 				break;
 			default:
@@ -201,9 +201,6 @@ public class ClientHandler implements Runnable {
 		server.removeClient(this);
 	}
 
-	public String toString() {
-		return name;
-	}
 
 	public boolean equals(ClientHandler ch) {
 		if (ch instanceof ClientHandler) {
@@ -250,5 +247,10 @@ public class ClientHandler implements Runnable {
 
 	public BufferedWriter getOut() {
 		return out;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }
