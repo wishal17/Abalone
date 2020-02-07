@@ -98,7 +98,7 @@ public class Server implements Runnable {
 			try {
 				// try to open a new ServerSocket
 				view.showMessage("Attempting to open a socket at localhost " + "on port number: " + port + "...\n");
-				ssock = new ServerSocket(port, 0, InetAddress.getByName("localhost"));
+				ssock = new ServerSocket(port, 0, InetAddress.getByName("192.168.1.210"));
 				view.showMessage("Server started at port " + port);
 			} catch (IOException e) {
 				view.showMessage("\nERROR: Invalid port number entered. Please enter a valid port number");
@@ -125,11 +125,15 @@ public class Server implements Runnable {
 	 * @param msg
 	 * @throws IOException
 	 */
-	public void sendMessagetoAll(String msg) throws IOException {
-		for (ClientHandler ch : clients) {
-			ch.getOut().write(msg);
-			ch.getOut().newLine();
-			ch.getOut().flush();
+	public void sendMessagetoAll(String msg, ClientHandler cl) throws IOException {
+		if (msg.charAt(0) != 'E') {
+			for (ClientHandler ch : clients) {
+				ch.getOut().write(msg);
+				ch.getOut().newLine();
+				ch.getOut().flush();
+			}
+		} else {
+			cl.sendMessage(msg);
 		}
 	}
 
@@ -202,12 +206,16 @@ public class Server implements Runnable {
 		int roomno;
 		try {
 			roomno = Integer.parseInt(roomnum);
-			if (rooms.get(roomno - 1).getStatus().equals("Started")) {
-				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "RoomHasStarted\n";
-			}
 			if (roomno < 1 || roomno > 10) {
 				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "NotValidNumber\n";
 			}
+			if (rooms.get(roomno - 1).getStatus().equals("Started")) {
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "RoomHasStarted\n";
+			}
+			if (client.inroom) {
+				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "AlreadyInRoom\n";
+			}
+
 			if (rooms.get(roomno - 1).getPlayerList().size() == 4) {
 				return ProtocolMessages.ERROR + ProtocolMessages.DELIMITER + "Full\n";
 			}

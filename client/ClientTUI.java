@@ -17,12 +17,15 @@ public class ClientTUI implements ClientView, Runnable {
 
 	private Client client;
 	private boolean connected = false;
-	Scanner read;
-	Board localboard;
+	private Scanner read;
+	private Board localboard;
 	private List<String> names;
 	private boolean started = false;
 	private InetAddress ip;
 	private int port;
+	private boolean reconnecting = false;
+	private String name = "";
+	private String response = "";
 
 	public ClientTUI() {
 		client = new Client();
@@ -39,8 +42,8 @@ public class ClientTUI implements ClientView, Runnable {
 	@Override
 	public void start() throws ServerUnavailableException, ProtocolException {
 		try {
-			ip = getIp();
-			while(client.serverSock == null) {
+			while (client.serverSock == null) {
+				ip = getIp();
 				port = getInt("Port: ");
 				showMessage("Attempting to connect to " + ip + ":" + port + "...");
 				try {
@@ -51,21 +54,21 @@ public class ClientTUI implements ClientView, Runnable {
 				}
 			}
 			connected = true;
-
-			String response = "";
-			boolean valid = false;
-			String name = "";
-			while (!valid) {
-				while (name.equals("") || name == null) {
-					name = getString("\nNot Connected. \nPlease enter a name to connect to the server:");
-					valid = true;
-				}
+			while (response.contains(String.valueOf(ProtocolMessages.ERROR) + String.valueOf(ProtocolMessages.DELIMITER))||response.equals("")) {
+				response = "";
+				name = getString("\nNot Connected. \nPlease enter a name to connect to the server:");
 				client.start(name);
 				response = client.readLineFromServer();
-				if (response.contains(ProtocolMessages.ERROR + ProtocolMessages.DELIMITER)) {
-					valid = false;
+				handleIncoming(response);
+			}
+
+			if (reconnecting) {
+				try {
+					client.createConnection(ip, port);
+				} catch (NoServerOnPortException e1) {
+					System.out.println("\nPort number invalid. Please enter a valid port number");
 				}
-				name = "";
+				client.start(name);
 			}
 			System.out.println("Welcome to Abalone");
 			printHelpMenu();
@@ -77,10 +80,14 @@ public class ClientTUI implements ClientView, Runnable {
 					break;
 				}
 			}
-
 			connected = false;
 			client.sendDisconnect();
-			client.closeConnection();
+			System.out.println("Would you like to reconnect('y'):");
+			String answer = read.nextLine();
+			if (answer.equals("y")) {
+				reconnecting = true;
+				start();
+			}
 		} catch (ServerUnavailableException | ExitProgram e) {
 			System.out.println("You have disconnected");
 		}
@@ -127,8 +134,9 @@ public class ClientTUI implements ClientView, Runnable {
 			System.out.println(messages[2] + " has joined room " + messages[1]);
 			break;
 		case "L":
-			if(started) {
-				localboard.removePlayersMarbles(localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])));
+			if (started) {
+				localboard
+						.removePlayersMarbles(localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])));
 				System.out.println(localboard.printBoardCoords());
 				System.out.println(localboard.printBoardValues());
 			}
@@ -144,6 +152,7 @@ public class ClientTUI implements ClientView, Runnable {
 				names.add(messages[i]);
 			}
 			started = true;
+			System.out.println();
 			System.out.println(localboard.printBoardCoords());
 			System.out.println(localboard.printBoardValues());
 			break;
@@ -152,24 +161,26 @@ public class ClientTUI implements ClientView, Runnable {
 			break;
 		case "F":
 			started = false;
-			if(messages.length==3) {
-				System.out.println(messages[2]+" and "+messages[1]+" are the winners!");
-			} else if (messages.length==2) {
-				System.out.println(messages[1]+" is the winner!");
+			if (messages.length == 3) {
+				System.out.println(messages[2] + " and " + messages[1] + " are the winners!");
+			} else if (messages.length == 2) {
+				System.out.println(messages[1] + " is the winner!");
 			} else {
 				System.out.println("Draw there is no winner!");
 			}
 			break;
 		case "D":
-			if(started) {
-				localboard.removePlayersMarbles(localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])));
+			if (started) {
+				localboard
+						.removePlayersMarbles(localboard.orderofMarbles(names.size()).get(names.indexOf(messages[1])));
+				System.out.println();
 				System.out.println(localboard.printBoardCoords());
 				System.out.println(localboard.printBoardValues());
 			}
-			System.out.println(messages[1]+" has left the server");
+			System.out.println(messages[1] + " has left the server");
 			break;
 		case "A":
-			System.out.println("The party leader chose "+messages[1]+" as their teammate");
+			System.out.println("The party leader chose " + messages[1] + " as their teammate");
 			break;
 		case "M":
 			String pos1, pos2, pos3;
@@ -190,6 +201,7 @@ public class ClientTUI implements ClientView, Runnable {
 				localboard.isValidMove(pos1, Integer.parseInt(messages[2]),
 						localboard.orderofMarbles(names.size()).get(names.indexOf(messages[3])));
 			}
+			System.out.println();
 			System.out.println(localboard.printBoardCoords());
 			System.out.println(localboard.printBoardValues());
 			System.out.println("eliminated marbles: " + localboard.eliminated);
@@ -225,7 +237,6 @@ public class ClientTUI implements ClientView, Runnable {
 				client.startGame();
 				break;
 			case "D":
-				client.sendDisconnect();
 				throw new ExitProgram("Program Exited");
 			// break;
 			default:
@@ -325,6 +336,7 @@ public class ClientTUI implements ClientView, Runnable {
 
 	/**
 	 * Used to check if an expected number is indeed a number
+	 * 
 	 * @param s
 	 * @return true if is a number else returns false
 	 */
