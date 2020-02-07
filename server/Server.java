@@ -14,7 +14,7 @@ import protocol.ProtocolMessages;
 /*
  * Server TUI for Abalone
  * 
- * Intended Functionality: interactively set up & monitor a new server
+ * Intended Functionality:interactively set up & monitor a new server
  */
 public class Server implements Runnable {
 
@@ -98,7 +98,7 @@ public class Server implements Runnable {
 			try {
 				// try to open a new ServerSocket
 				view.showMessage("Attempting to open a socket at localhost " + "on port number: " + port + "...\n");
-				ssock = new ServerSocket(port, 0, InetAddress.getByName("192.168.1.210"));
+				ssock = new ServerSocket(port, 0, InetAddress.getByName("localhost"));
 				view.showMessage("Server started at port " + port);
 			} catch (IOException e) {
 				view.showMessage("\nERROR: Invalid port number entered. Please enter a valid port number");
@@ -162,8 +162,7 @@ public class Server implements Runnable {
 
 	/**
 	 * Returns a String to be sent as a response to a Client CONNECT request,
-	 * including the name of the hotel: ProtocolMessages.CONNECT +
-	 * ProtocolMessages.DELIMITER + player name);
+	 * ProtocolMessages.CONNECT + ProtocolMessages.DELIMITER + player name);
 	 * 
 	 * @return String to be sent to client as a handshake response.
 	 */
